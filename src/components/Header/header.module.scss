@@ -1,0 +1,19 @@
+.header {
+  position: relative;
+}
+
+.blue__line {
+  background-color: var(--primary-color);
+  height: 50px;
+}
+
+.aquamarine__line {
+  background-color: var(--secondary-color);
+  height: 20px;
+}
+
+.logo {
+  position: absolute;
+  left: 64px;
+  top: 15px;
+}
