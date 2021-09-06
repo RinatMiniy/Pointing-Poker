@@ -1,11 +1,11 @@
-import "./header.module.scss";
+import styles from "./header.module.scss";
 
 export const Header = () => {
   return (
-    <header className="header">
-      <div className="blue__line"></div>
-      <div className="aquamarine__line"></div>
-      <img className="logo" src="./logo.svg" alt="logo" />
+    <header className={styles.header}>
+      <div className={styles.blue__line}></div>
+      <div className={styles.aquamarine__line}></div>
+      <img className={styles.logo} src="./logo.svg" alt="logo" />
     </header>
   );
 };
