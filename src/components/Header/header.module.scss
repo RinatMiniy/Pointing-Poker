@@ -1,14 +1,14 @@
-header {
+.header {
   position: relative;
 }
 
 .blue__line {
-  background-color: #2b3a67;
+  background-color: var(--primary-color);
   height: 50px;
 }
 
 .aquamarine__line {
-  background-color: #66999b;
+  background-color: var(--secondary-color);
   height: 20px;
 }
 
