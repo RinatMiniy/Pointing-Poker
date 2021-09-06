@@ -19,12 +19,20 @@ module.exports = {
         ],
       },
       {
-        test: /\.scss$/i,
-        use: ["style-loader", "css-loader", "sass-loader"],
-      },
-      {
-        test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        test: /\.s?css$/i,
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              modules: {
+                localIdentName: "[name]__[local]--[hash:base64]",
+                auto: true,
+              },
+            },
+          },
+          "sass-loader",
+        ],
       },
       {
         test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
