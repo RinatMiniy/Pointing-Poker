@@ -1,0 +1,9 @@
+.layout {
+  display: grid;
+  grid-template-rows: 70px 1fr 70px;
+  grid-template-areas:
+    "hd"
+    "main"
+    "ft";
+  min-height: 100vh;
+}
