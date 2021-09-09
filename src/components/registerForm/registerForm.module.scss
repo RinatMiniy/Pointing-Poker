@@ -1,0 +1,29 @@
+.registerForm {
+  width: 876px;
+  height: 833px;
+  position: absolute;
+  background: white;
+  opacity: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -30%);
+}
+
+.connectToLobby {
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 75px;
+  color: #000000;
+}
+
+.overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #000000;
+  opacity: 0.7;
+}
