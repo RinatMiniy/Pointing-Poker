@@ -10,9 +10,13 @@
   padding: 75px 35px;
 }
 
-form {
+.formRegister {
   display: flex;
   flex-direction: column;
+
+  & input {
+    margin: 16px 0 26px;
+  }
 }
 
 .connectToLobby {

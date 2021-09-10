@@ -26,27 +26,26 @@ export const RegisterForm: React.FC = () => {
     reset();
   };
 
-  // React.useEffect(() => {
-  //   register("firstName", {
-  //     validate: (value) => !!value.length || "Name shoud be set!",
-  //   });
-  //   register("lastName", {
-  //     validate: (value) => !!value.length || "Surname shoud be set!",
-  //   });
-  // }, [register]);
+  React.useEffect(() => {
+    register("firstName", {
+      validate: (value) => !!value.length || "Name shoud be set!",
+    });
+    register("lastName", {
+      validate: (value) => !!value.length || "Last name shoud be set!",
+    });
+  }, [register]);
 
   return (
     <>
       <div className={styles.overlay}></div>
       <div className={styles.registerForm}>
         <h3 className={styles.connectToLobby}>Connect to lobby</h3>
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <form className={styles.formRegister} onSubmit={handleSubmit(onSubmit)}>
           <InputText
             field="Your first name:"
             {...register("firstName")}
             error={errors.firstName?.message}
           />
-          {console.log({ ...register("firstName") })}
           <InputText
             field="Your last name (optional):"
             {...register("lastName")}
@@ -63,7 +62,7 @@ export const RegisterForm: React.FC = () => {
           <input type="file" id="fileInput" className={styles.fileInput} />
           <div className={styles.observerWrapper}>
             <div className={styles.label}>Connect as Observer</div>
-            <Switcher />
+            <Switcher {...register("observer")} />
           </div>
           <div className={styles.confirmButton}>
             <Button text="Confirm" isPrimary={true} />
