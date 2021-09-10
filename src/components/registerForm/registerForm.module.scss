@@ -7,6 +7,12 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -30%);
+  padding: 75px 35px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
 }
 
 .connectToLobby {
@@ -16,6 +22,7 @@
   font-size: 64px;
   line-height: 75px;
   color: #000000;
+  margin-bottom: 50px;
 }
 
 .overlay {
@@ -26,4 +33,53 @@
   bottom: 0;
   background: #000000;
   opacity: 0.7;
+}
+
+.label {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileInputLabel {
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 0px 0px 0px 10px;
+  height: 47px;
+  width: 275px;
+  text-align: center;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 28px;
+  margin: 16px 0 26px;
+}
+
+.observerWrapper {
+  position: absolute;
+  right: 6%;
+  top: 12%;
+  text-align: center;
+  display: flex;
+}
+
+.confirmButton {
+  position: absolute;
+  bottom: 0%;
+  left: 0%;
+}
+
+.cancelButton {
+  position: absolute;
+  bottom: 0%;
+  right: 0%;
 }

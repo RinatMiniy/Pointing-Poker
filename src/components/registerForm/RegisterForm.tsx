@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "../../sharedComponents/button/button";
 import { InputText } from "../../sharedComponents/inputText/InputText";
+import { Switcher } from "../../sharedComponents/switcher/Switcher";
 
 import styles from "./registerForm.module.scss";
 
@@ -9,6 +10,7 @@ type FormItem = {
   firstName: string;
   lastName: string;
   position: string;
+  observer: boolean;
 };
 
 export const RegisterForm: React.FC = () => {
@@ -17,21 +19,21 @@ export const RegisterForm: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormItem>({});
+  } = useForm<FormItem>();
 
   const onSubmit = (data: FormItem) => {
-    reset();
     console.log(data);
+    reset();
   };
 
-  React.useEffect(() => {
-    register("firstName", {
-      validate: (value) => !!value.length || "Name shoud be set!",
-    });
-    register("lastName", {
-      validate: (value) => !!value.length || "Surname shoud be set!",
-    });
-  }, [register]);
+  // React.useEffect(() => {
+  //   register("firstName", {
+  //     validate: (value) => !!value.length || "Name shoud be set!",
+  //   });
+  //   register("lastName", {
+  //     validate: (value) => !!value.length || "Surname shoud be set!",
+  //   });
+  // }, [register]);
 
   return (
     <>
@@ -42,23 +44,34 @@ export const RegisterForm: React.FC = () => {
           <InputText
             field="Your first name:"
             {...register("firstName")}
-            type="text"
             error={errors.firstName?.message}
           />
+          {console.log({ ...register("firstName") })}
           <InputText
             field="Your last name (optional):"
             {...register("lastName")}
-            type="text"
             error={errors.lastName?.message}
           />
           <InputText
             field="Your job position (optional):"
             {...register("position")}
-            type="date"
-            error={errors.position?.message}
           />
-          <Button text="Confirm" isPrimary={true} />
+          <div className={styles.label}>Image:</div>
+          <label htmlFor="fileInput" className={styles.fileInputLabel}>
+            Choose file
+          </label>
+          <input type="file" id="fileInput" className={styles.fileInput} />
+          <div className={styles.observerWrapper}>
+            <div className={styles.label}>Connect as Observer</div>
+            <Switcher />
+          </div>
+          <div className={styles.confirmButton}>
+            <Button text="Confirm" isPrimary={true} />
+          </div>
         </form>
+        <div className={styles.cancelButton}>
+          <Button text="Cancel" />
+        </div>
       </div>
     </>
   );
