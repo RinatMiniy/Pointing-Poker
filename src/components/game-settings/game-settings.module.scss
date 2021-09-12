@@ -1,0 +1,12 @@
+.gameSettings {
+  display: flex;
+  flex-direction: column;
+  width: 550px;
+  font-family: Ruda;
+  gap: 20px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+}

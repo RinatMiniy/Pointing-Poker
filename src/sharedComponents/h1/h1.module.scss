@@ -1,0 +1,15 @@
+.h1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 82px;
+
+  h1 {
+    font-family: Ruda;
+    font-size: 24px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 62vw;
+    overflow: hidden;
+  }
+}
