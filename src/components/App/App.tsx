@@ -3,11 +3,13 @@ import { Layout } from "../Layout/Layout";
 import { Header } from "../Header/Header";
 import { Footer } from "../Footer/Footer";
 import "./app.scss";
+import { RegisterForm } from "../registerForm/RegisterForm";
 
 export const App: React.FC = () => {
   return (
     <Layout>
       <Header />
+      <RegisterForm />
       <Footer />
     </Layout>
   );
