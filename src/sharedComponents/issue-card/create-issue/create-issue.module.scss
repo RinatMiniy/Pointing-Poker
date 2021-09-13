@@ -1,0 +1,12 @@
+.plus {
+  width: 30px;
+  height: 30px;
+  fill: rgb(112, 112, 112);
+  margin-left: auto;
+  cursor: pointer;
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}

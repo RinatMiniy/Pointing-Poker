@@ -1,0 +1,27 @@
+.delete {
+  width: 35px;
+  height: 35px;
+  margin-left: auto;
+  cursor: pointer;
+  transition: transform 0.3s;
+  pointer-events: auto;
+
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.active {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.userFaq {
+  font-size: 14px;
+}
+
+.job {
+  font-size: 10px;
+  color: rgb(116, 116, 116);
+}
