@@ -25,21 +25,21 @@ export const GameSettings: React.FC<IGameSettingsProps> = (props) => {
       <div className={styles.item}>
         <div className={styles.title}>Scram master as player:</div>
         <Switcher
-          checked={props.gameSettings.scramIsPlayer}
+          value={props.gameSettings.masterPlayer}
           onChange={props.handlerScrumIsPlayer}
         />
       </div>
       <div className={styles.item}>
         <div className={styles.title}>Changing card in round end:</div>
         <Switcher
-          checked={props.gameSettings.changeCardInEnd}
+          value={props.gameSettings.changingCard}
           onChange={props.handleChangeCardInEnd}
         />
       </div>
       <div className={styles.item}>
         <div className={styles.title}>Is timer needed:</div>
         <Switcher
-          checked={props.gameSettings.isTimerNeed}
+          value={props.gameSettings.timer}
           onChange={props.handleIsTimerNeed}
         />
       </div>
@@ -64,8 +64,8 @@ export const GameSettings: React.FC<IGameSettingsProps> = (props) => {
       <div className={styles.item}>
         <div className={styles.title}>Round time:</div>
         <TimeField
-          min={props.gameSettings.time.min}
-          sec={props.gameSettings.time.sec}
+          min={Math.floor(+props.gameSettings.roundTime / 60)}
+          sec={+props.gameSettings.roundTime % 60}
           onSetMinutes={props.onSetMinutes}
           onSetSeconds={props.onSetSeconds}
         />

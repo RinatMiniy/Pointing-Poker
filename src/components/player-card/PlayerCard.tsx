@@ -1,28 +1,21 @@
 import React from "react";
 import { UserAvatar } from "../../sharedComponents/user-avatar/UserAvatar";
-import { IUser } from "../../types";
+import { IUserComplete } from "../../types";
 import { CardContainer } from "../../sharedComponents/card-container/CardContainer";
 
 import styles from "./player-card.module.scss";
 
 type IPlayerCard = {
-  onDelete?: (id: number) => void;
+  onDelete?: (soket: string) => void;
 };
 
-export const PlayerCard: React.FC<IUser & IPlayerCard> = (props) => {
+export const PlayerCard: React.FC<IUserComplete & IPlayerCard> = (props) => {
   return (
     <CardContainer>
       <UserAvatar
         isMiddleSize={true}
-        user={{
-          id: props.id,
-          firstName: props.firstName,
-          lastName: props.lastName,
-          job: props.job,
-          isActive: props.isActive,
-          img: props.img,
-          userRole: props.userRole,
-        }}
+        firstName={props.firstName}
+        lastName={props.lastName}
       />
       <div className={styles.userInformation}>
         {props.isActive && <div className={styles.active}>It&apos;s you</div>}
@@ -31,10 +24,10 @@ export const PlayerCard: React.FC<IUser & IPlayerCard> = (props) => {
         </div>
         {props.job && <div className={styles.job}>{props.job}</div>}
       </div>
-      {props.userRole !== "admin" && !props.isActive && (
+      {props.userRole !== "delear" && !props.isActive && (
         <svg
           className={styles.delete}
-          onClick={() => props.onDelete(props.id)}
+          onClick={() => props.onDelete(props.socket)}
           viewBox="0 0 512 512"
         >
           <path d="m256 512c-141.160156 0-256-114.839844-256-256s114.839844-256 256-256 256 114.839844 256 256-114.839844 256-256 256zm0-475.429688c-120.992188 0-219.429688 98.4375-219.429688 219.429688s98.4375 219.429688 219.429688 219.429688 219.429688-98.4375 219.429688-219.429688-98.4375-219.429688-219.429688-219.429688zm0 0" />

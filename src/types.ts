@@ -1,13 +1,27 @@
-export type Role = "admin" | "observer" | "player";
+export type Role = "dealer" | "observer" | "player";
 
 export type IUser = {
-  id: number;
   firstName: string;
   lastName: string;
-  img?: string;
-  job?: string;
+  userRole: string;
+  socket: string;
+};
+
+export type IUserComplete = {
+  firstName: string;
+  lastName: string;
+  userRole: string;
+  socket: string;
   isActive: boolean;
-  userRole: Role;
+  job?: string;
+  img?: string;
+};
+
+export type IUserRequest = {
+  firstName: string;
+  lastName: string;
+  position: string;
+  observer: boolean;
 };
 
 export enum Priority {
@@ -23,13 +37,10 @@ export type IIssueCard = {
 };
 
 export type IGameSettings = {
-  scramIsPlayer: boolean;
-  changeCardInEnd: boolean;
-  isTimerNeed: boolean;
+  changingCard: boolean;
+  masterPlayer: boolean;
+  roundTime: string;
   scoreType: string;
   scoreTypeShort: string;
-  time: {
-    min: number;
-    sec: number;
-  };
+  timer: boolean;
 };

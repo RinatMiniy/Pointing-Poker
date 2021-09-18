@@ -1,8 +1,14 @@
 import React from "react";
+import { Redirect } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import { useNotify } from "../../hooks/useNotify";
 import { Button } from "../../sharedComponents/button/button";
 import { InputText } from "../../sharedComponents/inputText/InputText";
 import { Switcher } from "../../sharedComponents/switcher/Switcher";
+import { requstRegistry } from "../redux/actions";
+import { selectError, selectLoaded } from "../redux/selectors";
 
 import styles from "./registerForm.module.scss";
 
@@ -21,8 +27,21 @@ export const RegisterForm: React.FC = () => {
     reset,
   } = useForm<FormItem>();
 
+  const loaded = useSelector(selectLoaded);
+
+  const dispatch = useDispatch();
+
+  const notify = useNotify();
+
+  const error = useSelector(selectError);
+
   const onSubmit = (data: FormItem) => {
-    console.log(data);
+    dispatch(requstRegistry({ user: data }));
+
+    error
+      ? notify({ type: "error", message: error })
+      : notify({ type: "success", message: "Succes" });
+
     reset();
   };
 
@@ -70,8 +89,20 @@ export const RegisterForm: React.FC = () => {
         </form>
         <div className={styles.cancelButton}>
           <Button text="Cancel" />
+          {loaded && <Redirect to="/lobby" />}
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={"colored"}
+      />
     </>
   );
 };
