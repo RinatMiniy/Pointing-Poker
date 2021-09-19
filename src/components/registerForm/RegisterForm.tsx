@@ -15,7 +15,7 @@ import styles from "./registerForm.module.scss";
 type FormItem = {
   firstName: string;
   lastName: string;
-  position: string;
+  job: string;
   observer: boolean;
 };
 
@@ -72,7 +72,7 @@ export const RegisterForm: React.FC = () => {
           />
           <InputText
             field="Your job position (optional):"
-            {...register("position")}
+            {...register("job")}
           />
           <div className={styles.label}>Image:</div>
           <label htmlFor="fileInput" className={styles.fileInputLabel}>

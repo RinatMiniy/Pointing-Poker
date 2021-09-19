@@ -5,6 +5,8 @@ export type IUser = {
   lastName: string;
   userRole: string;
   socket: string;
+  job?: string;
+  img?: string;
 };
 
 export type IUserComplete = {
@@ -20,8 +22,9 @@ export type IUserComplete = {
 export type IUserRequest = {
   firstName: string;
   lastName: string;
-  position: string;
   observer: boolean;
+  img?: string;
+  job?: string;
 };
 
 export enum Priority {

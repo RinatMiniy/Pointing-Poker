@@ -260,8 +260,11 @@ export const requstRegistry = (params: { user: IUserRequest }) => {
           lastName: params.user.lastName,
           role: "dealer",
           observer: params.user.observer,
+          job: params.user.job,
+          img: params.user.img,
         },
       });
+      console.log(response);
       dispatch(getSession(response));
       dispatch(loadedSession(true));
     } catch (e) {

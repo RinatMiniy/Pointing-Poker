@@ -194,8 +194,8 @@ export const LobbyPage: React.FC = () => {
         firstName={dealer.firstName}
         lastName={dealer.lastName}
         isActive={true}
-        job="designer"
-        img=""
+        job={dealer.job}
+        img={dealer.img}
         userRole="dealer"
         socket={dealer.socket}
       />
@@ -211,7 +211,7 @@ export const LobbyPage: React.FC = () => {
 
       <H1 text="Members:" />
       <Members
-        members={users}
+        members={users.filter((user) => user.socket !== dealer.socket)}
         onDelete={(socket: string) =>
           setUsers(users.filter((user) => user.socket !== socket))
         }

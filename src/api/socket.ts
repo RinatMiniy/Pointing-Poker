@@ -11,6 +11,8 @@ interface ISendCreate {
     lastName: string;
     role: string;
     observer: boolean;
+    job?: string;
+    img?: string;
   };
 }
 
