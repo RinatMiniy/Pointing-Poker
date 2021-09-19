@@ -109,26 +109,15 @@ export const LobbyPage: React.FC = () => {
     }
   };
 
-  //TODO: Handle minuted amd seconds
+  const onSetTimer = (time: { min: number; sec: number }) => {
+    const value = String(time.min * 60 + time.sec);
+    console.log(time, value);
 
-  const onSetMinutes = (e: React.ChangeEvent) => {
-    const target = e.target as HTMLInputElement;
     setGameSettings({
       ...gameSettings,
-      roundTime: String(+target.value * 60),
+      roundTime: value,
     });
-    dispatch(roundTime(String(+target.value * 60)));
-  };
-
-  const onSetSeconds = (e: React.ChangeEvent) => {
-    const target = e.target as HTMLInputElement;
-    setGameSettings({
-      ...gameSettings,
-      roundTime: String(+gameSettings.roundTime + target.value),
-    });
-    dispatch(
-      roundTime(String(Math.round(+gameSettings.roundTime / 60) + target.value))
-    );
+    dispatch(roundTime(value));
   };
 
   const handlerScrumIsPlayer = () => {
@@ -230,8 +219,7 @@ export const LobbyPage: React.FC = () => {
       <H1 text="Game settings:" />
       <GameSettings
         gameSettings={gameSettings}
-        onSetMinutes={onSetMinutes}
-        onSetSeconds={onSetSeconds}
+        onSetTimer={onSetTimer}
         handlerScrumIsPlayer={handlerScrumIsPlayer}
         handleChangeCardInEnd={handleChangeCardInEnd}
         handleIsTimerNeed={handleIsTimerNeed}

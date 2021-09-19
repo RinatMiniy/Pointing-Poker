@@ -8,8 +8,7 @@ import styles from "./game-settings.module.scss";
 
 type NewType = {
   gameSettings: IGameSettings;
-  onSetMinutes: (e: React.ChangeEvent) => void;
-  onSetSeconds: (e: React.ChangeEvent) => void;
+  onSetTimer: (time: { min: number; sec: number }) => void;
   handlerScrumIsPlayer: () => void;
   handleChangeCardInEnd: () => void;
   handleIsTimerNeed: () => void;
@@ -66,8 +65,7 @@ export const GameSettings: React.FC<IGameSettingsProps> = (props) => {
         <TimeField
           min={Math.floor(+props.gameSettings.roundTime / 60)}
           sec={+props.gameSettings.roundTime % 60}
-          onSetMinutes={props.onSetMinutes}
-          onSetSeconds={props.onSetSeconds}
+          onSetTimer={props.onSetTimer}
         />
       </div>
       <div className={styles.title}>Add card values:</div>

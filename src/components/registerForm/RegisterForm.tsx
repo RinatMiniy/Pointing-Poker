@@ -49,9 +49,6 @@ export const RegisterForm: React.FC = () => {
     register("firstName", {
       validate: (value) => !!value.length || "Name shoud be set!",
     });
-    register("lastName", {
-      validate: (value) => !!value.length || "Last name shoud be set!",
-    });
   }, [register]);
 
   return (
