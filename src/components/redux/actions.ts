@@ -1,9 +1,8 @@
-import { IIssueCard, IUserRequest } from "../../types";
+import { IIssueCard, IUser, IUserRequest } from "../../types";
 import { socket } from "../../api/socket";
 import { Dispatch } from "redux";
 import { IResponse } from "./types";
 
-export const SEND_ACTIVE_USER = "SEND_ACTIVE_USER";
 export const GET_SESSION = "GET_SESSION";
 export const GET_SESSION_ERROR = "GET_SESSION_ERROR";
 export const LOADING_SESSION = "LOADING_SESSION";
@@ -18,13 +17,12 @@ export const TIMER = "TIMER";
 export const SCORE_TYPE = "SCORE_TYPE";
 export const SCORE_TYPE_SHORT = "SCORE_TYPE_SHORT";
 export const ROUND_TIME = "ROUND_TIME";
+export const DELETE_MEMBER = "DELETE_MEMBER";
+export const GET_USERS = "GET_USERS";
 
-export type ISendActiveUser = {
-  type: typeof SEND_ACTIVE_USER;
-  payload: {
-    user: IUserRequest;
-  };
-};
+export const SESSION_EXIST = "SESSION_EXIST";
+export const SESSION_CONNECT_LOADING = "SESSION_CONNECT_LOADING";
+export const REQUEST_ENTER = "ALLOW_ENTER";
 
 export type IGetSessionError = {
   type: typeof GET_SESSION_ERROR;
@@ -120,12 +118,46 @@ export type IScoreTypeShort = {
 export type IRoundTime = {
   type: typeof ROUND_TIME;
   payload: {
-    roundTime: string;
+    roundTime: number;
+  };
+};
+
+export type ISessionConnect = {
+  type: typeof SESSION_EXIST;
+  payload: {
+    sessionExist: boolean;
+  };
+};
+
+export type ISessionConnectLoading = {
+  type: typeof SESSION_CONNECT_LOADING;
+  payload: {
+    sessionConnectLoading: boolean;
+  };
+};
+
+export type IRequestEnter = {
+  type: typeof REQUEST_ENTER;
+  payload: {
+    requestEnter: boolean;
+  };
+};
+
+export type IDeleteMember = {
+  type: typeof DELETE_MEMBER;
+  payload: {
+    socketId: string;
+  };
+};
+
+export type IGetUsers = {
+  type: typeof GET_USERS;
+  payload: {
+    users: IUser[];
   };
 };
 
 export type IUnion =
-  | ISendActiveUser
   | IGetSession
   | IUpdateTitle
   | IGetSessionError
@@ -139,119 +171,154 @@ export type IUnion =
   | ITimer
   | IScoreType
   | IScoreTypeShort
-  | IRoundTime;
+  | IRoundTime
+  | ISessionConnect
+  | ISessionConnectLoading
+  | IRequestEnter
+  | IDeleteMember
+  | IGetUsers;
 
-export const sendActiveUser = (user: IUserRequest) => ({
-  type: SEND_ACTIVE_USER,
-  payload: {
-    user,
-  },
-});
-
-export const getSession = (session: IResponse) => ({
+export const getSession = (session: IResponse): IGetSession => ({
   type: GET_SESSION,
   payload: {
     session,
   },
 });
 
-export const getSessionError = (err: string | null) => ({
+export const getSessionError = (error: string | null): IGetSessionError => ({
   type: GET_SESSION_ERROR,
   payload: {
-    err,
+    error,
   },
 });
 
-export const loadingSession = (loading: boolean) => ({
+export const loadingSession = (loading: boolean): ILoadingSession => ({
   type: LOADING_SESSION,
   payload: {
     loading,
   },
 });
 
-export const loadedSession = (loaded: boolean) => ({
+export const loadedSession = (loaded: boolean): ILoadedSession => ({
   type: LOADED_SESSION,
   payload: {
     loaded,
   },
 });
 
-export const updateTitle = (title: string) => ({
+export const updateTitle = (title: string): IUpdateTitle => ({
   type: UPDATE_TITLE,
   payload: {
     title,
   },
 });
 
-export const createIssue = (issue: IIssueCard) => ({
+export const createIssue = (issue: IIssueCard): ICreateIssue => ({
   type: CREATE_ISSUE,
   payload: {
     issue,
   },
 });
 
-export const updateIssue = (issue: IIssueCard) => ({
+export const updateIssue = (issue: IIssueCard): IUpdateIssue => ({
   type: UPDATE_ISSUE,
   payload: {
     issue,
   },
 });
 
-export const deleteIssue = (id: number) => ({
+export const deleteIssue = (id: number): IDeleteIssue => ({
   type: DELETE_ISSUE,
   payload: {
     id,
   },
 });
 
-export const masterPlayer = (masterPlayer: boolean) => ({
+export const masterPlayer = (masterPlayer: boolean): IMasterPlayer => ({
   type: MASTER_PLAYER,
   payload: {
     masterPlayer,
   },
 });
 
-export const changingCard = (changingCard: boolean) => ({
+export const changingCard = (changingCard: boolean): IChangingCard => ({
   type: CHANGING_CARD,
   payload: {
     changingCard,
   },
 });
 
-export const timer = (timer: boolean) => ({
+export const timer = (timer: boolean): ITimer => ({
   type: TIMER,
   payload: {
     timer,
   },
 });
 
-export const scoreType = (scoreType: string) => ({
+export const scoreType = (scoreType: string): IScoreType => ({
   type: SCORE_TYPE,
   payload: {
     scoreType,
   },
 });
 
-export const scoreTypeShort = (scoreTypeShort: string) => ({
+export const scoreTypeShort = (scoreTypeShort: string): IScoreTypeShort => ({
   type: SCORE_TYPE_SHORT,
   payload: {
     scoreTypeShort,
   },
 });
 
-export const roundTime = (roundTime: string) => ({
+export const roundTime = (roundTime: number): IRoundTime => ({
   type: ROUND_TIME,
   payload: {
     roundTime,
   },
 });
 
-export const requstRegistry = (params: { user: IUserRequest }) => {
+export const sessionConnect = (sessionExist: boolean): ISessionConnect => ({
+  type: SESSION_EXIST,
+  payload: {
+    sessionExist,
+  },
+});
+
+export const sessionConnectLoading = (
+  sessionConnectLoading: boolean
+): ISessionConnectLoading => ({
+  type: SESSION_CONNECT_LOADING,
+  payload: {
+    sessionConnectLoading,
+  },
+});
+
+export const requestEnter = (requestEnter: boolean): IRequestEnter => ({
+  type: REQUEST_ENTER,
+  payload: {
+    requestEnter,
+  },
+});
+
+export const deleteMember = (socketId: string): IDeleteMember => ({
+  type: DELETE_MEMBER,
+  payload: {
+    socketId,
+  },
+});
+
+export const getUsers = (users: IUser[]): IGetUsers => ({
+  type: GET_USERS,
+  payload: {
+    users,
+  },
+});
+
+export const requestRegistry = (params: { user: IUserRequest }) => {
   return async (dispatch: Dispatch) => {
-    dispatch(sendActiveUser(params.user));
     dispatch(getSessionError(null));
     dispatch(loadingSession(true));
     dispatch(loadedSession(false));
+
     try {
       const response: IResponse = await socket.send({
         type: "create",
@@ -261,16 +328,62 @@ export const requstRegistry = (params: { user: IUserRequest }) => {
           role: "dealer",
           observer: params.user.observer,
           job: params.user.job,
-          img: params.user.img,
+          avatar: params.user.avatar,
         },
       });
-      console.log(response);
+
       dispatch(getSession(response));
       dispatch(loadedSession(true));
+
+      socket.subscribeToUpdates<IResponse>((data) => {
+        console.log(1);
+        dispatch(getUsers(data.users));
+      });
     } catch (e) {
       dispatch(getSessionError(e.message));
     } finally {
       dispatch(loadingSession(false));
     }
+  };
+};
+
+export const requestSession = (params: { link: string }) => {
+  return async (dispatch: Dispatch) => {
+    dispatch(sessionConnectLoading(true));
+    try {
+      const response: boolean = await socket.check({
+        type: "check",
+        payload: {
+          link: params.link,
+        },
+      });
+      dispatch(sessionConnect(response));
+      return response;
+    } catch (e) {
+      console.log(e);
+    } finally {
+      dispatch(sessionConnectLoading(false));
+    }
+  };
+};
+
+export const requestLogin = (params: { hash: string; user: IUserRequest }) => {
+  return (dispatch: Dispatch) => {
+    const subscribeToUpdates = () => {
+      socket.subscribeToUpdates<IResponse>((data) => {
+        dispatch(getSession(data));
+        dispatch(loadedSession(true));
+      });
+    };
+
+    dispatch(loadedSession(false));
+    subscribeToUpdates();
+    socket.login(params.hash, params.user, (mess: string) => {
+      if (mess !== "вошел") {
+        dispatch(getSessionError("Something went wrong"));
+      } else {
+        dispatch(getSessionError("Something went wrong"));
+      }
+    });
   };
 };

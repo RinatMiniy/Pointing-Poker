@@ -15,6 +15,10 @@ import {
   SCORE_TYPE,
   SCORE_TYPE_SHORT,
   ROUND_TIME,
+  SESSION_EXIST,
+  SESSION_CONNECT_LOADING,
+  DELETE_MEMBER,
+  GET_USERS,
 } from "./actions";
 import { IStore } from "./types";
 
@@ -26,15 +30,16 @@ const initialState: IStore = {
   settings: {
     changingCard: false,
     masterPlayer: true,
-    roundTime: "140",
+    roundTime: 140,
     scoreType: "story point",
     scoreTypeShort: "SP",
     timer: true,
   },
-  activeUser: null,
   error: null,
   loading: false,
   loaded: false,
+  sessionExist: false,
+  sessionConnectLoading: false,
 };
 
 export function reducer(state: IStore = initialState, action: IUnion): IStore {
@@ -47,7 +52,6 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
         users: action.payload.session.users,
         issues: action.payload.session.issues,
         settings: action.payload.session.settings,
-        activeUser: action.payload.session.users[0],
       };
 
     case LOADING_SESSION:
@@ -140,6 +144,33 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
           ...state.settings,
           roundTime: action.payload.roundTime,
         },
+      };
+
+    case SESSION_EXIST: {
+      return {
+        ...state,
+        sessionExist: action.payload.sessionExist,
+      };
+    }
+
+    case SESSION_CONNECT_LOADING:
+      return {
+        ...state,
+        sessionConnectLoading: action.payload.sessionConnectLoading,
+      };
+
+    case DELETE_MEMBER:
+      return {
+        ...state,
+        users: state.users.filter(
+          (user) => user.socket !== action.payload.socketId
+        ),
+      };
+
+    case GET_USERS:
+      return {
+        ...state,
+        users: action.payload.users,
       };
 
     default:

@@ -2,8 +2,7 @@ import React from "react";
 import { IUser } from "../../types";
 import { PlayerCard } from "../../components/player-card/PlayerCard";
 import { Grid } from "../grid/Grid";
-import { useSelector } from "react-redux";
-import { selectActiveUser } from "../../components/redux/selectors";
+import { socketIO } from "../../api/socket";
 
 type IMembers = {
   members: IUser[];
@@ -11,7 +10,6 @@ type IMembers = {
 };
 
 export const Members: React.FC<IMembers> = (props) => {
-  const activeUser = useSelector(selectActiveUser);
   return (
     <Grid>
       {props.members.map((member) => (
@@ -20,7 +18,7 @@ export const Members: React.FC<IMembers> = (props) => {
           firstName={member.firstName}
           lastName={member.lastName}
           socket={member.socket}
-          isActive={member.socket === activeUser.socket}
+          isActive={member.socket === socketIO.id}
           img=""
           job=""
           role={member.role}

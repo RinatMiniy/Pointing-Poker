@@ -7,8 +7,12 @@ import { useNotify } from "../../hooks/useNotify";
 import { Button } from "../../sharedComponents/button/button";
 import { InputText } from "../../sharedComponents/inputText/InputText";
 import { Switcher } from "../../sharedComponents/switcher/Switcher";
-import { requstRegistry } from "../redux/actions";
-import { selectError, selectLoaded } from "../redux/selectors";
+import { requestLogin, requestRegistry } from "../redux/actions";
+import {
+  selectError,
+  selectLoaded,
+  selectSessionHash,
+} from "../redux/selectors";
 
 import styles from "./registerForm.module.scss";
 
@@ -16,10 +20,17 @@ type FormItem = {
   firstName: string;
   lastName: string;
   job: string;
+  avatar: string;
   observer: boolean;
 };
 
-export const RegisterForm: React.FC = () => {
+type IRegistrationFormProps = {
+  isMaster: boolean;
+  hash?: string;
+  onCancel: () => void;
+};
+
+export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
   const {
     register,
     handleSubmit,
@@ -28,6 +39,7 @@ export const RegisterForm: React.FC = () => {
   } = useForm<FormItem>();
 
   const loaded = useSelector(selectLoaded);
+  const hash = useSelector(selectSessionHash);
 
   const dispatch = useDispatch();
 
@@ -36,7 +48,18 @@ export const RegisterForm: React.FC = () => {
   const error = useSelector(selectError);
 
   const onSubmit = (data: FormItem) => {
-    dispatch(requstRegistry({ user: data }));
+    if (props.isMaster) {
+      dispatch(requestRegistry({ user: { ...data, role: "delear" } }));
+    } else {
+      // socket.login(props.hash, { ...data, role: "player" }, (mess: string) => {
+      //   if (mess === "вошел") {
+      //     dispatch(requestRegistry({ user: { ...data, role: "player" } }));
+      //   }
+      // });
+      dispatch(
+        requestLogin({ hash: props.hash, user: { ...data, role: "player" } })
+      );
+    }
 
     error
       ? notify({ type: "error", message: error })
@@ -82,11 +105,13 @@ export const RegisterForm: React.FC = () => {
           </div>
           <div className={styles.confirmButton}>
             <Button text="Confirm" isPrimary={true} />
+            {loaded && (
+              <Redirect to={`/${props.isMaster ? hash : props.hash}`} />
+            )}
           </div>
         </form>
         <div className={styles.cancelButton}>
-          <Button text="Cancel" />
-          {loaded && <Redirect to="/lobby" />}
+          <Button text="Cancel" onClick={props.onCancel} />
         </div>
       </div>
       <ToastContainer

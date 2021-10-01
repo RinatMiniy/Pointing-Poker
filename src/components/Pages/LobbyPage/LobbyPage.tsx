@@ -13,7 +13,6 @@ import { GameSettings } from "../../game-settings/GameSettings";
 import styles from "./lobby-page.module.scss";
 import { Issues } from "../../issues/Issues";
 import {
-  selectActiveUser,
   selectIssues,
   selectSessionHash,
   selectSessionTitle,
@@ -31,17 +30,17 @@ import {
   scoreType,
   scoreTypeShort,
   roundTime,
+  deleteMember,
 } from "../../redux/actions";
+import { socketIO } from "../../../api/socket";
 
 export const LobbyPage: React.FC = () => {
   const dispatch = useDispatch();
-  const [users, setUsers] = React.useState(useSelector(selectUsers));
+  const users = useSelector(selectUsers);
 
   const issues = useSelector(selectIssues);
 
-  const [gameSettings, setGameSettings] = React.useState(
-    useSelector(selectSettings)
-  );
+  const gameSettings = useSelector(selectSettings);
 
   const [sessionTitle, setSessionTitle] = React.useState(
     useSelector(selectSessionTitle)
@@ -51,7 +50,8 @@ export const LobbyPage: React.FC = () => {
     selectSessionHash
   )}`;
 
-  const dealer = useSelector(selectActiveUser);
+  const dealer = users.find((user) => user.role === "dealer");
+  const isDelear = dealer.socket === socketIO.id;
 
   const [inputVisible, setInputVisible] = React.useState(false);
 
@@ -110,13 +110,7 @@ export const LobbyPage: React.FC = () => {
   };
 
   const onSetTimer = (time: { min: number; sec: number }) => {
-    const value = String(time.min * 60 + time.sec);
-    console.log(time, value);
-
-    setGameSettings({
-      ...gameSettings,
-      roundTime: value,
-    });
+    const value = time.min * 60 + time.sec;
     dispatch(roundTime(value));
   };
 
@@ -129,115 +123,137 @@ export const LobbyPage: React.FC = () => {
   };
 
   const handleIsTimerNeed = () => {
+    debugger;
     dispatch(timer(!gameSettings.timer));
   };
 
   const handleScopeType = (e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement;
-    setGameSettings({
-      ...gameSettings,
-      scoreType: target.value,
-    });
     dispatch(scoreType(target.value));
   };
 
   const handleScopeTypeShort = (e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement;
-    setGameSettings({
-      ...gameSettings,
-      scoreTypeShort: target.value,
-    });
     dispatch(scoreTypeShort(target.value));
   };
 
   return (
-    <div className={styles.lobby}>
-      {!inputVisible && (
-        <div className={styles.mainTitle}>
-          <H1 text={sessionTitle} />
-          <svg onClick={() => setInputVisible(true)} viewBox="0 0 19 18">
-            <path
-              d="M11.06 6.02L11.98 6.94L2.92 16H2V15.08L11.06 6.02ZM14.66 0C14.41 0 14.15 0.1 13.96 0.29L12.13 2.12L15.88 5.87L17.71 4.04C18.1 3.65 18.1 3.02 17.71 2.63L15.37 0.29C15.17 0.09 14.92 0 14.66 0ZM11.06 3.19L0 14.25V18H3.75L14.81 6.94L11.06 3.19Z"
-              fill="black"
-            />
-          </svg>
+    <>
+      {isDelear ? (
+        <div className={styles.lobby}>
+          {!inputVisible && (
+            <div className={styles.mainTitle}>
+              <H1 text={sessionTitle} />
+              <svg onClick={() => setInputVisible(true)} viewBox="0 0 19 18">
+                <path
+                  d="M11.06 6.02L11.98 6.94L2.92 16H2V15.08L11.06 6.02ZM14.66 0C14.41 0 14.15 0.1 13.96 0.29L12.13 2.12L15.88 5.87L17.71 4.04C18.1 3.65 18.1 3.02 17.71 2.63L15.37 0.29C15.17 0.09 14.92 0 14.66 0ZM11.06 3.19L0 14.25V18H3.75L14.81 6.94L11.06 3.19Z"
+                  fill="black"
+                />
+              </svg>
+            </div>
+          )}
+          {inputVisible && (
+            <div className={styles.mainTitle}>
+              <InputText
+                field=""
+                name="gameName"
+                value={sessionTitle}
+                onChange={handleSessionName}
+              />
+              <Button
+                text="confirm"
+                isPrimary={true}
+                onClick={onSubmitSessionName}
+              />
+            </div>
+          )}
+          <div className={styles.scramMasterTitle}>Scram Master:</div>
+          <PlayerCard
+            firstName={dealer.firstName}
+            lastName={dealer.lastName}
+            isActive={dealer.socket === socketIO.id}
+            job={dealer.job}
+            img={dealer.avatar}
+            userRole="dealer"
+            socket={dealer.socket}
+          />
+          <div className={styles.link}>
+            <InputText field="Link to lobby:" name="link" value={link} />
+            <Button text="copy" isPrimary={true} onClick={handleCopy} />
+          </div>
+
+          <div className={styles.gameControls}>
+            <Button text="start game" isPrimary={true} />
+            <Button text="cancel game" />
+          </div>
+
+          <H1 text="Members:" />
+          <Members
+            members={users.filter((user) => user.socket !== dealer.socket)}
+            onDelete={(socket: string) => dispatch(deleteMember(socket))}
+          />
+
+          <H1 text="Issues:" />
+          <Issues
+            issues={issues}
+            onDelete={(id: number) => dispatch(deleteIssue(id))}
+            onChange={onChangeIssue}
+            onConfirmUpdate={onConfirmUpdate}
+            onChangePriority={onChangePriority}
+            onConfirmCreate={onConfirmCreate}
+          />
+
+          <H1 text="Game settings:" />
+          <GameSettings
+            gameSettings={gameSettings}
+            onSetTimer={onSetTimer}
+            handlerScrumIsPlayer={handlerScrumIsPlayer}
+            handleChangeCardInEnd={handleChangeCardInEnd}
+            handleIsTimerNeed={handleIsTimerNeed}
+            handleScopeType={handleScopeType}
+            handleScopeTypeShort={handleScopeTypeShort}
+          />
+
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme={"colored"}
+          />
+        </div>
+      ) : (
+        <div className={styles.lobby}>
+          <div className={styles.mainTitle}>
+            <H1 text={sessionTitle} />
+          </div>
+
+          <div className={styles.scramMasterTitle}>Scram Master:</div>
+          <PlayerCard
+            firstName={dealer.firstName}
+            lastName={dealer.lastName}
+            isActive={dealer.socket === socketIO.id}
+            job={dealer.job}
+            img={dealer.avatar}
+            userRole="dealer"
+            socket={dealer.socket}
+          />
+
+          <div className={styles.exit}>
+            <Button text="Exit" />
+          </div>
+
+          <H1 text="Members:" />
+          <Members
+            members={users.filter((user) => user.socket !== dealer.socket)}
+            onDelete={(socket: string) => dispatch(deleteMember(socket))}
+          />
         </div>
       )}
-      {inputVisible && (
-        <div className={styles.mainTitle}>
-          <InputText
-            field=""
-            name="gameName"
-            value={sessionTitle}
-            onChange={handleSessionName}
-          />
-          <Button
-            text="confirm"
-            isPrimary={true}
-            onClick={onSubmitSessionName}
-          />
-        </div>
-      )}
-      <div className={styles.scramMasterTitle}>Scram Master:</div>
-      <PlayerCard
-        firstName={dealer.firstName}
-        lastName={dealer.lastName}
-        isActive={true}
-        job={dealer.job}
-        img={dealer.img}
-        userRole="dealer"
-        socket={dealer.socket}
-      />
-      <div className={styles.link}>
-        <InputText field="Link to lobby:" name="link" value={link} />
-        <Button text="copy" isPrimary={true} onClick={handleCopy} />
-      </div>
-
-      <div className={styles.gameControls}>
-        <Button text="start game" isPrimary={true} />
-        <Button text="cancel game" />
-      </div>
-
-      <H1 text="Members:" />
-      <Members
-        members={users.filter((user) => user.socket !== dealer.socket)}
-        onDelete={(socket: string) =>
-          setUsers(users.filter((user) => user.socket !== socket))
-        }
-      />
-
-      <H1 text="Issues:" />
-      <Issues
-        issues={issues}
-        onDelete={(id: number) => dispatch(deleteIssue(id))}
-        onChange={onChangeIssue}
-        onConfirmUpdate={onConfirmUpdate}
-        onChangePriority={onChangePriority}
-        onConfirmCreate={onConfirmCreate}
-      />
-
-      <H1 text="Game settings:" />
-      <GameSettings
-        gameSettings={gameSettings}
-        onSetTimer={onSetTimer}
-        handlerScrumIsPlayer={handlerScrumIsPlayer}
-        handleChangeCardInEnd={handleChangeCardInEnd}
-        handleIsTimerNeed={handleIsTimerNeed}
-        handleScopeType={handleScopeType}
-        handleScopeTypeShort={handleScopeTypeShort}
-      />
-
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme={"colored"}
-      />
-    </div>
+    </>
   );
 };

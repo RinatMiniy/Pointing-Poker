@@ -14,8 +14,9 @@ export type IStore = {
   users: IUser[];
   issues: IIssueCard[];
   settings: IGameSettings;
-  activeUser: IUser | null;
   error: string | null;
   loading: boolean;
   loaded: boolean;
+  sessionExist: boolean;
+  sessionConnectLoading: boolean;
 };

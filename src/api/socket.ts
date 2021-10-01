@@ -1,6 +1,11 @@
 import io from "socket.io-client";
+import { IUserRequest } from "../types";
 
-const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
+// export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
+//   transports: ["websocket", "polling"],
+// });
+
+export const socketIO = io("http://localhost:3000", {
   transports: ["websocket", "polling"],
 });
 
@@ -12,9 +17,21 @@ interface ISendCreate {
     role: string;
     observer: boolean;
     job?: string;
-    img?: string;
+    avatar?: string;
   };
 }
+
+interface ISendCheck {
+  type: "check";
+  payload: {
+    link: string;
+  };
+}
+
+// export interface ISendLogin {
+//   type: "login";
+//   payload: IUserRequest;
+// }
 
 function send<T>(data: ISendCreate): Promise<T> {
   return new Promise((resolve) => {
@@ -28,6 +45,29 @@ function send<T>(data: ISendCreate): Promise<T> {
   });
 }
 
+function subscribeToUpdates<T>(fn: (data: T) => void) {
+  socketIO.on("update", fn);
+}
+
+function check<T>(data: ISendCheck): Promise<T> {
+  return new Promise((resolve) => {
+    socketIO.emit(data.type, data.payload.link, (data: T) => {
+      resolve(data);
+    });
+  });
+}
+
+function login(
+  hash: string,
+  data: IUserRequest,
+  callback: (mess: string) => void
+) {
+  socketIO.emit("login", hash, { ...data, socket: socketIO.id }, callback);
+}
+
 export const socket = {
   send,
+  check,
+  login,
+  subscribeToUpdates,
 };

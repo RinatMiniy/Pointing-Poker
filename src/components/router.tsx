@@ -1,6 +1,6 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
-import { MainPage } from "./MainPage/MainPage";
+import { MainPage } from "./Pages/MainPage/MainPage";
 import { LobbyPage } from "./Pages/LobbyPage/LobbyPage";
 
 export const RouterApp: React.FC = () => {
@@ -9,7 +9,7 @@ export const RouterApp: React.FC = () => {
       <Route exact path="/">
         <MainPage />
       </Route>
-      <Route exact path="/lobby">
+      <Route exact path="/:hash">
         <LobbyPage />
       </Route>
     </Switch>
