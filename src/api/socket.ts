@@ -68,6 +68,10 @@ function kickForUserNotification(fn: () => void) {
   socketIO.on("kick", fn);
 }
 
+function exit() {
+  socketIO.emit("exit");
+}
+
 export const socket = {
   send,
   check,
@@ -75,4 +79,5 @@ export const socket = {
   subscribeToUpdates,
   kick,
   kickForUserNotification,
+  exit,
 };
