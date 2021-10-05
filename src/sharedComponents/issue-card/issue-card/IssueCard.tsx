@@ -6,18 +6,21 @@ import { NewIssueCard } from "../new-issue-card/NewIssueCard";
 import styles from "./issue-card.module.scss";
 
 type IIssueCardProps = {
-  onChange: (id: number, title: string) => void;
+  onChange: (id: number, title: string, priority: Priority) => void;
   onConfirmUpdate: (title: string) => void;
   onDelete: (id: number) => void;
-  onChangePriority: (id: number, priority: Priority) => void;
+  onChangePriority: (id: number, title: string, priority: Priority) => void;
 };
 
 export const IssueCard: React.FC<IIssueCard & IIssueCardProps> = (props) => {
   const [isChanging, setIsChanging] = React.useState(false);
+  const [title, setTitle] = React.useState(props.title);
+  const [priority, setPriority] = React.useState(props.priority);
 
   const onChange = (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement;
-    props.onChange(props.id, target.value);
+    props.onChange(props.id, target.value, priority);
+    setTitle(target.value);
   };
 
   const onConfirmUpdate = (title: string) => {
@@ -29,7 +32,8 @@ export const IssueCard: React.FC<IIssueCard & IIssueCardProps> = (props) => {
 
   const onChangePriority = (e: ChangeEvent) => {
     const target = e.target as HTMLSelectElement;
-    props.onChangePriority(props.id, target.value as Priority);
+    setPriority(target.value as Priority);
+    props.onChangePriority(props.id, title, target.value as Priority);
   };
 
   return (

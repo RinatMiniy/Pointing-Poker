@@ -8,11 +8,9 @@ import { NewIssueCard } from "../../sharedComponents/issue-card/new-issue-card/N
 type IIssuesProps = {
   issues: IIssueCard[];
   onDelete: (id: number) => void;
-  onChange: (id: number, title: string) => void;
+  onChange: (id: number, title: string, priority: Priority) => void;
   onConfirmUpdate: (title: string) => void;
-  onChangePriority: (id: number, priority: Priority) => void;
-  // onCreateIssue?: (e: ChangeEvent) => void;
-  // onSetPriotity?: (e: ChangeEvent) => void;
+  onChangePriority: (id: number, title: string, priority: Priority) => void;
   onConfirmCreate: (title: string, pririty: Priority) => void;
 };
 

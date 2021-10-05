@@ -4,8 +4,9 @@ import { PlayerCard } from "../../components/player-card/PlayerCard";
 import { Grid } from "../grid/Grid";
 
 type IMembers = {
+  isMaster: boolean;
   members: IUser[];
-  onDelete: (id: number) => void;
+  onDelete?: (socket: string) => void;
 };
 
 export const Members: React.FC<IMembers> = (props) => {
@@ -13,15 +14,15 @@ export const Members: React.FC<IMembers> = (props) => {
     <Grid>
       {props.members.map((member) => (
         <PlayerCard
-          key={member.id}
-          id={member.id}
+          key={member.socket}
           firstName={member.firstName}
           lastName={member.lastName}
-          isActive={member.isActive}
-          img={member.img}
+          socket={member.socket}
+          avatar={member.avatar}
           job={member.job}
-          userRole={member.userRole}
+          role={member.role}
           onDelete={props.onDelete}
+          isMaster={props.isMaster}
         />
       ))}
     </Grid>
