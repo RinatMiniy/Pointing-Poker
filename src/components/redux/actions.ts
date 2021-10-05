@@ -247,6 +247,7 @@ export const roundTime = (roundTime: string) => ({
 });
 
 export const requstRegistry = (params: { user: IUserRequest }) => {
+  console.log("user", params.user.avatar);
   return async (dispatch: Dispatch) => {
     dispatch(sendActiveUser(params.user));
     dispatch(getSessionError(null));
@@ -261,7 +262,7 @@ export const requstRegistry = (params: { user: IUserRequest }) => {
           role: "dealer",
           observer: params.user.observer,
           job: params.user.job,
-          img: params.user.img,
+          avatar: params.user.avatar,
         },
       });
       console.log(response);

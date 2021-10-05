@@ -184,7 +184,7 @@ export const LobbyPage: React.FC = () => {
         lastName={dealer.lastName}
         isActive={true}
         job={dealer.job}
-        img={dealer.img}
+        avatar={dealer.avatar}
         userRole="dealer"
         socket={dealer.socket}
       />

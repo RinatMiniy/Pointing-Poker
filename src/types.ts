@@ -6,7 +6,7 @@ export type IUser = {
   userRole: string;
   socket: string;
   job?: string;
-  img?: string;
+  avatar?: string;
 };
 
 export type IUserComplete = {
@@ -16,14 +16,14 @@ export type IUserComplete = {
   socket: string;
   isActive: boolean;
   job?: string;
-  img?: string;
+  avatar?: string;
 };
 
 export type IUserRequest = {
   firstName: string;
   lastName: string;
   observer: boolean;
-  img?: string;
+  avatar?: string;
   job?: string;
 };
 

@@ -33,7 +33,11 @@ export const MainPage: React.FC = () => {
           <Button text="Connect" isPrimary={true} isLong={true} />
         </div>
       </div>
-      {openRegistration && <RegisterForm />}
+      {openRegistration && (
+        <RegisterForm
+          setOpenRegistration={(event: boolean) => setOpenRegistration(event)}
+        />
+      )}
     </div>
   );
 };

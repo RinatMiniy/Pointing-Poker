@@ -21,9 +21,9 @@ export const Members: React.FC<IMembers> = (props) => {
           lastName={member.lastName}
           socket={member.socket}
           isActive={member.socket === activeUser.socket}
-          img=""
+          avatar={member.avatar}
           job=""
-          role={member.role}
+          userRole=""
           onDelete={props.onDelete}
         />
       ))}

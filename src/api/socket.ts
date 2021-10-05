@@ -12,7 +12,7 @@ interface ISendCreate {
     role: string;
     observer: boolean;
     job?: string;
-    img?: string;
+    avatar: string;
   };
 }
 

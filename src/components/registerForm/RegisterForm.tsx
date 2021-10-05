@@ -1,5 +1,5 @@
-import React from "react";
-import { Redirect } from "react-router-dom";
+import React, { FC, useState } from "react";
+import { Redirect, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
@@ -11,6 +11,7 @@ import { requstRegistry } from "../redux/actions";
 import { selectError, selectLoaded } from "../redux/selectors";
 
 import styles from "./registerForm.module.scss";
+import { UserAvatar } from "../../sharedComponents/user-avatar/UserAvatar";
 
 type FormItem = {
   firstName: string;
@@ -19,13 +20,19 @@ type FormItem = {
   observer: boolean;
 };
 
-export const RegisterForm: React.FC = () => {
+type RegisterFormType = {
+  setOpenRegistration?: (event: boolean) => void;
+};
+
+export const RegisterForm: FC<RegisterFormType> = (props) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<FormItem>();
+
+  const { setOpenRegistration } = props;
 
   const loaded = useSelector(selectLoaded);
 
@@ -35,8 +42,10 @@ export const RegisterForm: React.FC = () => {
 
   const error = useSelector(selectError);
 
+  const [userImg, setUserImg] = useState("");
+
   const onSubmit = (data: FormItem) => {
-    dispatch(requstRegistry({ user: data }));
+    dispatch(requstRegistry({ user: { ...data, avatar: userImg } }));
 
     error
       ? notify({ type: "error", message: error })
@@ -50,6 +59,15 @@ export const RegisterForm: React.FC = () => {
       validate: (value) => !!value.length || "Name shoud be set!",
     });
   }, [register]);
+
+  const handleUserImg = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = function () {
+      setUserImg(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
     <>
@@ -75,7 +93,12 @@ export const RegisterForm: React.FC = () => {
           <label htmlFor="fileInput" className={styles.fileInputLabel}>
             Choose file
           </label>
-          <input type="file" id="fileInput" className={styles.fileInput} />
+          <input
+            type="file"
+            id="fileInput"
+            className={styles.fileInput}
+            onChange={handleUserImg}
+          />
           <div className={styles.observerWrapper}>
             <div className={styles.label}>Connect as Observer</div>
             <Switcher {...register("observer")} />
@@ -84,10 +107,18 @@ export const RegisterForm: React.FC = () => {
             <Button text="Confirm" isPrimary={true} />
           </div>
         </form>
-        <div className={styles.cancelButton}>
-          <Button text="Cancel" />
-          {loaded && <Redirect to="/lobby" />}
-        </div>
+        <UserAvatar
+          firstName="A"
+          lastName="A"
+          avatar={userImg}
+          isMiddleSize={false}
+        />
+        <Link to="/">
+          <div className={styles.cancelButton}>
+            <Button text="Cancel" onClick={() => setOpenRegistration(false)} />
+            {loaded && <Redirect to="/lobby" />}
+          </div>
+        </Link>
       </div>
       <ToastContainer
         position="top-right"
