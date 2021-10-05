@@ -17,7 +17,6 @@ import {
   ROUND_TIME,
   SESSION_EXIST,
   SESSION_CONNECT_LOADING,
-  DELETE_MEMBER,
   GET_USERS,
 } from "./actions";
 import { IStore } from "./types";
@@ -157,14 +156,6 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
       return {
         ...state,
         sessionConnectLoading: action.payload.sessionConnectLoading,
-      };
-
-    case DELETE_MEMBER:
-      return {
-        ...state,
-        users: state.users.filter(
-          (user) => user.socket !== action.payload.socketId
-        ),
       };
 
     case GET_USERS:

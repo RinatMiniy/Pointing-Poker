@@ -1,13 +1,13 @@
 import io from "socket.io-client";
 import { IUserRequest } from "../types";
 
-// export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
-//   transports: ["websocket", "polling"],
-// });
-
-export const socketIO = io("http://localhost:3000", {
+export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
   transports: ["websocket", "polling"],
 });
+
+// export const socketIO = io("http://localhost:3000", {
+//   transports: ["websocket", "polling"],
+// });
 
 interface ISendCreate {
   type: "create";
@@ -27,11 +27,6 @@ interface ISendCheck {
     link: string;
   };
 }
-
-// export interface ISendLogin {
-//   type: "login";
-//   payload: IUserRequest;
-// }
 
 function send<T>(data: ISendCreate): Promise<T> {
   return new Promise((resolve) => {
@@ -65,9 +60,19 @@ function login(
   socketIO.emit("login", hash, { ...data, socket: socketIO.id }, callback);
 }
 
+function kick(socket: string) {
+  socketIO.emit("kick", socket);
+}
+
+function kickForUserNotification(fn: () => void) {
+  socketIO.on("kick", fn);
+}
+
 export const socket = {
   send,
   check,
   login,
   subscribeToUpdates,
+  kick,
+  kickForUserNotification,
 };

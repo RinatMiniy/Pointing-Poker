@@ -1,15 +1,19 @@
 import React from "react";
 import { UserAvatar } from "../../sharedComponents/user-avatar/UserAvatar";
-import { IUserComplete } from "../../types";
+import { IUser } from "../../types";
 import { CardContainer } from "../../sharedComponents/card-container/CardContainer";
 
 import styles from "./player-card.module.scss";
+import { socketIO } from "../../api/socket";
 
 type IPlayerCard = {
-  onDelete?: (soket: string) => void;
+  isMaster: boolean;
+  onDelete?: (socket: string) => void;
 };
 
-export const PlayerCard: React.FC<IUserComplete & IPlayerCard> = (props) => {
+export const PlayerCard: React.FC<IUser & IPlayerCard> = (props) => {
+  const isActive = props.socket === socketIO.id;
+
   return (
     <CardContainer>
       <UserAvatar
@@ -18,13 +22,13 @@ export const PlayerCard: React.FC<IUserComplete & IPlayerCard> = (props) => {
         lastName={props.lastName}
       />
       <div className={styles.userInformation}>
-        {props.isActive && <div className={styles.active}>It&apos;s you</div>}
+        {isActive && <div className={styles.active}>It&apos;s you</div>}
         <div className={styles.useFaq}>
           {props.firstName} {props.lastName}
         </div>
         {props.job && <div className={styles.job}>{props.job}</div>}
       </div>
-      {props.userRole !== "delear" && !props.isActive && (
+      {props.role !== "dealer" && props.isMaster && (
         <svg
           className={styles.delete}
           onClick={() => props.onDelete(props.socket)}

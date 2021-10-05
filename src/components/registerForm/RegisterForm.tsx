@@ -51,11 +51,6 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
     if (props.isMaster) {
       dispatch(requestRegistry({ user: { ...data, role: "delear" } }));
     } else {
-      // socket.login(props.hash, { ...data, role: "player" }, (mess: string) => {
-      //   if (mess === "вошел") {
-      //     dispatch(requestRegistry({ user: { ...data, role: "player" } }));
-      //   }
-      // });
       dispatch(
         requestLogin({ hash: props.hash, user: { ...data, role: "player" } })
       );

@@ -17,12 +17,10 @@ export const TIMER = "TIMER";
 export const SCORE_TYPE = "SCORE_TYPE";
 export const SCORE_TYPE_SHORT = "SCORE_TYPE_SHORT";
 export const ROUND_TIME = "ROUND_TIME";
-export const DELETE_MEMBER = "DELETE_MEMBER";
 export const GET_USERS = "GET_USERS";
 
 export const SESSION_EXIST = "SESSION_EXIST";
 export const SESSION_CONNECT_LOADING = "SESSION_CONNECT_LOADING";
-export const REQUEST_ENTER = "ALLOW_ENTER";
 
 export type IGetSessionError = {
   type: typeof GET_SESSION_ERROR;
@@ -136,20 +134,6 @@ export type ISessionConnectLoading = {
   };
 };
 
-export type IRequestEnter = {
-  type: typeof REQUEST_ENTER;
-  payload: {
-    requestEnter: boolean;
-  };
-};
-
-export type IDeleteMember = {
-  type: typeof DELETE_MEMBER;
-  payload: {
-    socketId: string;
-  };
-};
-
 export type IGetUsers = {
   type: typeof GET_USERS;
   payload: {
@@ -174,8 +158,6 @@ export type IUnion =
   | IRoundTime
   | ISessionConnect
   | ISessionConnectLoading
-  | IRequestEnter
-  | IDeleteMember
   | IGetUsers;
 
 export const getSession = (session: IResponse): IGetSession => ({
@@ -292,20 +274,6 @@ export const sessionConnectLoading = (
   },
 });
 
-export const requestEnter = (requestEnter: boolean): IRequestEnter => ({
-  type: REQUEST_ENTER,
-  payload: {
-    requestEnter,
-  },
-});
-
-export const deleteMember = (socketId: string): IDeleteMember => ({
-  type: DELETE_MEMBER,
-  payload: {
-    socketId,
-  },
-});
-
 export const getUsers = (users: IUser[]): IGetUsers => ({
   type: GET_USERS,
   payload: {
@@ -336,7 +304,6 @@ export const requestRegistry = (params: { user: IUserRequest }) => {
       dispatch(loadedSession(true));
 
       socket.subscribeToUpdates<IResponse>((data) => {
-        console.log(1);
         dispatch(getUsers(data.users));
       });
     } catch (e) {
@@ -380,8 +347,6 @@ export const requestLogin = (params: { hash: string; user: IUserRequest }) => {
     subscribeToUpdates();
     socket.login(params.hash, params.user, (mess: string) => {
       if (mess !== "вошел") {
-        dispatch(getSessionError("Something went wrong"));
-      } else {
         dispatch(getSessionError("Something went wrong"));
       }
     });

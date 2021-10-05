@@ -2,11 +2,11 @@ import React from "react";
 import { IUser } from "../../types";
 import { PlayerCard } from "../../components/player-card/PlayerCard";
 import { Grid } from "../grid/Grid";
-import { socketIO } from "../../api/socket";
 
 type IMembers = {
+  isMaster: boolean;
   members: IUser[];
-  onDelete: (socket: string) => void;
+  onDelete?: (socket: string) => void;
 };
 
 export const Members: React.FC<IMembers> = (props) => {
@@ -18,11 +18,11 @@ export const Members: React.FC<IMembers> = (props) => {
           firstName={member.firstName}
           lastName={member.lastName}
           socket={member.socket}
-          isActive={member.socket === socketIO.id}
-          img=""
-          job=""
+          avatar={member.avatar}
+          job={member.job}
           role={member.role}
           onDelete={props.onDelete}
+          isMaster={props.isMaster}
         />
       ))}
     </Grid>
