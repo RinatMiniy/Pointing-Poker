@@ -9,10 +9,9 @@ import { PlayerCard } from "../../../player-card/PlayerCard";
 import { Members } from "../../../../sharedComponents/members/Members";
 import { Priority } from "../../../../types";
 import { GameSettings } from "../../../game-settings/GameSettings";
-
-import styles from "../lobby-page.module.scss";
 import { Issues } from "../../../issues/Issues";
 import {
+  selectCards,
   selectIssues,
   selectSessionHash,
   selectSessionTitle,
@@ -33,21 +32,22 @@ import {
 } from "../../../redux/actions";
 import { socket } from "../../../../api/socket";
 
+import styles from "../lobby-page.module.scss";
+
 export const LobbyDealer: React.FC = () => {
   const dispatch = useDispatch();
+
   const users = useSelector(selectUsers);
-
   const issues = useSelector(selectIssues);
-
   const gameSettings = useSelector(selectSettings);
+  const cards = useSelector(selectCards);
+  const link = `http://pockerplanning.chttp://${useSelector(
+    selectSessionHash
+  )}`;
 
   const [sessionTitle, setSessionTitle] = React.useState(
     useSelector(selectSessionTitle)
   );
-
-  const link = `http://pockerplanning.chttp://${useSelector(
-    selectSessionHash
-  )}`;
 
   const dealer = users.find((user) => user.role === "dealer");
 
@@ -209,9 +209,9 @@ export const LobbyDealer: React.FC = () => {
           handleIsTimerNeed={handleIsTimerNeed}
           handleScopeType={handleScopeType}
           handleScopeTypeShort={handleScopeTypeShort}
+          cards={cards}
         />
       </div>
-      )
     </>
   );
 };

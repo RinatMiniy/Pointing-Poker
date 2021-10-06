@@ -5,9 +5,11 @@ import { TimeField } from "../time-field/TimeField";
 import { IGameSettings } from "../../types";
 
 import styles from "./game-settings.module.scss";
+import { GameCardsField } from "../../sharedComponents/game-cards-field/GameCardsField";
 
 type NewType = {
   gameSettings: IGameSettings;
+  cards: string[];
   onSetTimer: (time: { min: number; sec: number }) => void;
   handlerScrumIsPlayer: () => void;
   handleChangeCardInEnd: () => void;
@@ -69,6 +71,10 @@ export const GameSettings: React.FC<IGameSettingsProps> = (props) => {
         />
       </div>
       <div className={styles.title}>Add card values:</div>
+      <GameCardsField
+        cards={props.cards}
+        sessionShortTitle={props.gameSettings.scoreTypeShort}
+      />
     </div>
   );
 };
