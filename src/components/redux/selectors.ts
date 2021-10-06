@@ -10,6 +10,8 @@ export const selectSessionTitle = (state: IStore) => state.title;
 
 export const selectSessionHash = (state: IStore) => state.hash;
 
+export const selectCards = (state: IStore) => state.cards;
+
 export const selectError = (state: IStore) => state.error;
 
 export const selectLoading = (state: IStore) => state.loading;

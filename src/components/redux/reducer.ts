@@ -18,6 +18,7 @@ import {
   SESSION_EXIST,
   SESSION_CONNECT_LOADING,
   GET_USERS,
+  UPDATE_VALUE_CARD,
 } from "./actions";
 import { IStore } from "./types";
 
@@ -34,6 +35,7 @@ const initialState: IStore = {
     scoreTypeShort: "SP",
     timer: true,
   },
+  cards: [],
   error: null,
   loading: false,
   loaded: false,
@@ -51,6 +53,7 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
         users: action.payload.session.users,
         issues: action.payload.session.issues,
         settings: action.payload.session.settings,
+        cards: action.payload.session.cards,
       };
 
     case LOADING_SESSION:
@@ -162,6 +165,14 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
       return {
         ...state,
         users: action.payload.users,
+      };
+
+    case UPDATE_VALUE_CARD:
+      return {
+        ...state,
+        cards: state.cards.map((card, idx) =>
+          action.payload.card.id === idx ? action.payload.card.value : card
+        ),
       };
 
     default:

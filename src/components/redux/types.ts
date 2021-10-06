@@ -6,6 +6,7 @@ export type IResponse = {
   users: IUser[];
   issues: IIssueCard[];
   settings: IGameSettings;
+  cards: string[];
 };
 
 export type IStore = {
@@ -14,6 +15,7 @@ export type IStore = {
   users: IUser[];
   issues: IIssueCard[];
   settings: IGameSettings;
+  cards: string[];
   error: string | null;
   loading: boolean;
   loaded: boolean;

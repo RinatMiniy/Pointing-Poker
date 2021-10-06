@@ -17,6 +17,7 @@ export const TIMER = "TIMER";
 export const SCORE_TYPE = "SCORE_TYPE";
 export const SCORE_TYPE_SHORT = "SCORE_TYPE_SHORT";
 export const ROUND_TIME = "ROUND_TIME";
+export const UPDATE_VALUE_CARD = "UPDATE_VALUE_CARD";
 export const GET_USERS = "GET_USERS";
 
 export const SESSION_EXIST = "SESSION_EXIST";
@@ -120,6 +121,13 @@ export type IRoundTime = {
   };
 };
 
+export type IValueCard = {
+  type: typeof UPDATE_VALUE_CARD;
+  payload: {
+    card: { id: number; value: string };
+  };
+};
+
 export type ISessionConnect = {
   type: typeof SESSION_EXIST;
   payload: {
@@ -156,6 +164,7 @@ export type IUnion =
   | IScoreType
   | IScoreTypeShort
   | IRoundTime
+  | IValueCard
   | ISessionConnect
   | ISessionConnectLoading
   | IGetUsers;
@@ -258,6 +267,16 @@ export const roundTime = (roundTime: number): IRoundTime => ({
   },
 });
 
+export const updateValueCard = (params: {
+  id: number;
+  value: string;
+}): IValueCard => ({
+  type: UPDATE_VALUE_CARD,
+  payload: {
+    card: { id: params.id, value: params.value },
+  },
+});
+
 export const sessionConnect = (sessionExist: boolean): ISessionConnect => ({
   type: SESSION_EXIST,
   payload: {
@@ -299,6 +318,8 @@ export const requestRegistry = (params: { user: IUserRequest }) => {
           avatar: params.user.avatar,
         },
       });
+
+      console.log(response);
 
       dispatch(getSession(response));
       dispatch(loadedSession(true));
