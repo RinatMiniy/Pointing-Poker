@@ -1,20 +1,21 @@
 /* eslint-disable jsx-a11y/aria-role */
 import React from "react";
 import { useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 import { useNotify } from "../../../../hooks/useNotify";
 import { H1 } from "../../../../sharedComponents/h1/H1";
 import { Button } from "../../../../sharedComponents/button/button";
 import { PlayerCard } from "../../../player-card/PlayerCard";
 import { Members } from "../../../../sharedComponents/members/Members";
-import { Redirect } from "react-router-dom";
-
-import styles from "../lobby-page.module.scss";
 import { selectSessionTitle, selectUsers } from "../../../redux/selectors";
 import { socket } from "../../../../api/socket";
+
+import styles from "../lobby-page.module.scss";
 
 export const LobbyPlayer: React.FC = () => {
   const users = useSelector(selectUsers);
   const [isDeletedUser, setDeletedUser] = React.useState(false);
+  const [isUserExit, setUserExit] = React.useState(false);
 
   const sessionTitle = useSelector(selectSessionTitle);
   const dealer = users.find((user) => user.role === "dealer");
@@ -27,6 +28,11 @@ export const LobbyPlayer: React.FC = () => {
       setDeletedUser(true);
     }, 3000);
   });
+
+  const handleExit = () => {
+    socket.exit();
+    setUserExit(true);
+  };
 
   return (
     <>
@@ -47,7 +53,7 @@ export const LobbyPlayer: React.FC = () => {
         />
 
         <div className={styles.exit}>
-          <Button text="Exit" />
+          <Button text="Exit" onClick={handleExit} />
         </div>
 
         <H1 text="Members:" />
@@ -56,7 +62,7 @@ export const LobbyPlayer: React.FC = () => {
           isMaster={false}
         />
 
-        {isDeletedUser && <Redirect to="/" />}
+        {isDeletedUser || (isUserExit && <Redirect to="/" />)}
       </div>
     </>
   );

@@ -5,11 +5,9 @@ import { Layout } from "../Layout/Layout";
 import { Header } from "../Header/Header";
 import { Footer } from "../Footer/Footer";
 import { RouterApp } from "../router";
-// import { LobbyPage } from "../Pages/LobbyPage/LobbyPage";
 import store from "../store";
 
 import "./app.scss";
-// import { RegisterForm } from "../registerForm/RegisterForm";
 
 export const App: React.FC = () => {
   return (
