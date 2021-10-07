@@ -1,19 +1,24 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from "react";
-import { useSelector } from "react-redux";
-import { selectSessionHash } from "../redux/selectors";
+import { useDispatch, useSelector } from "react-redux";
+import { selectSessionHash, selectChatOpen } from "../redux/selectors";
+import { changeChatOpen } from "../redux/actions";
 import styles from "./header.module.scss";
 
 export const Header = () => {
+  const dispatch = useDispatch();
   const hash = useSelector(selectSessionHash);
-  const [chatOpen, setChatOpen] = React.useState(false);
+  const chatOpen = useSelector(selectChatOpen);
 
   return (
     <header className={styles.header}>
       <div className={styles.blue__line}>
         {hash && (
-          <div className={styles.chat} onClick={() => setChatOpen(!chatOpen)}>
+          <div
+            className={styles.chat}
+            onClick={() => dispatch(changeChatOpen(!chatOpen))}
+          >
             {!chatOpen && (
               <img
                 className={styles.chat__logo}

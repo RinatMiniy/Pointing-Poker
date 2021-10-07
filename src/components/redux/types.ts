@@ -54,4 +54,5 @@ export type IStore = {
   game: IGame;
   voting: IVoting[];
   chat: IMsgToChat[];
+  chatOpen: boolean;
 };

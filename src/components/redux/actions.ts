@@ -12,6 +12,7 @@ export const DELETE_ISSUE = "DELETE_ISSUE";
 
 export const SESSION_EXIST = "SESSION_EXIST";
 export const SESSION_CONNECT_LOADING = "SESSION_CONNECT_LOADING";
+export const CHAT_OPEN = "CHAT_OPEN";
 
 export type IGetSessionError = {
   type: typeof GET_SESSION_ERROR;
@@ -69,6 +70,13 @@ export type ISessionConnectLoading = {
   };
 };
 
+export type IChatOpen = {
+  type: typeof CHAT_OPEN;
+  payload: {
+    chatOpen: boolean;
+  };
+};
+
 export type IUnion =
   | IGetSession
   | IGetSessionError
@@ -77,7 +85,8 @@ export type IUnion =
   | IUpdateIssue
   | IDeleteIssue
   | ISessionConnect
-  | ISessionConnectLoading;
+  | ISessionConnectLoading
+  | IChatOpen;
 
 export const getSession = (session: IResponse): IGetSession => ({
   type: GET_SESSION,
@@ -134,6 +143,13 @@ export const sessionConnectLoading = (
   type: SESSION_CONNECT_LOADING,
   payload: {
     sessionConnectLoading,
+  },
+});
+
+export const changeChatOpen = (chatOpen: boolean): IChatOpen => ({
+  type: CHAT_OPEN,
+  payload: {
+    chatOpen,
   },
 });
 
