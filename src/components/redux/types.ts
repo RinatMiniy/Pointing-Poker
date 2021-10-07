@@ -11,6 +11,8 @@ export type IResponse = {
   autoLogin: boolean;
   flipCards: boolean;
   game: IGame;
+  voting: IVoting[];
+  chat: IMsgToChat[];
 };
 
 export type IGame = {
@@ -20,6 +22,21 @@ export type IGame = {
   endRound: boolean;
   time: 0;
   issue: 0;
+};
+
+export type IVoting = {
+  run: boolean;
+  votes: IVoitesVotes;
+};
+
+export type IVoitesVotes = {
+  userSocket: string;
+  voteType: string;
+};
+
+export type IMsgToChat = {
+  user: IUser;
+  message: string;
 };
 
 export type IStore = {
@@ -35,4 +52,6 @@ export type IStore = {
   sessionExist: boolean;
   sessionConnectLoading: boolean;
   game: IGame;
+  voting: IVoting[];
+  chat: IMsgToChat[];
 };

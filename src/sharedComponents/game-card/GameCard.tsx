@@ -1,12 +1,12 @@
 import React from "react";
 import cn from "classnames";
-import { useDispatch } from "react-redux";
 import { EditorSvg } from "../../assets/editorSvg";
 import { useNotify } from "../../hooks/useNotify";
-import { updateValueCard } from "../../components/redux/actions";
+import { requestUpdate } from "../../components/redux/actions";
 import { GameCardContainer } from "../game-card-container/GameCardContainer";
 
 import styles from "./game-card.module.scss";
+import { Settings } from "../../types";
 
 type IGameCardProps = {
   id: number;
@@ -16,7 +16,6 @@ type IGameCardProps = {
 };
 
 export const GameCard: React.FC<IGameCardProps> = (props) => {
-  const dispatch = useDispatch();
   const [value, setValue] = React.useState(props.value);
   const [inputVisible, setInputVisible] = React.useState(false);
 
@@ -35,10 +34,13 @@ export const GameCard: React.FC<IGameCardProps> = (props) => {
     if (!value) {
       notify({ type: "error", message: "Value should be set!" });
       setInputVisible(false);
-    } else if (props.cards.includes(value)) {
+    } else if (props.cards.includes(value) && value !== props.value) {
       notify({ type: "error", message: "This value already exists!" });
     } else {
-      dispatch(updateValueCard({ id: props.id, value: value }));
+      requestUpdate(
+        Settings.cards,
+        props.cards.map((card, idx) => (idx === props.id ? value : card))
+      );
       notify({ type: "success", message: "Updated!" });
       setInputVisible(false);
     }
