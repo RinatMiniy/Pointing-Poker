@@ -37,6 +37,14 @@ const initialState: IStore = {
   loaded: false,
   sessionExist: false,
   sessionConnectLoading: false,
+  game: {
+    runGame: false,
+    endGame: false,
+    runRound: false,
+    endRound: false,
+    time: 0,
+    issue: 0,
+  },
 };
 
 export function reducer(state: IStore = initialState, action: IUnion): IStore {
@@ -44,12 +52,7 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
     case GET_SESSION:
       return {
         ...state,
-        title: action.payload.session.title,
-        hash: action.payload.session.hash,
-        users: action.payload.session.users,
-        issues: action.payload.session.issues,
-        settings: action.payload.session.settings,
-        cards: action.payload.session.cards,
+        ...action.payload.session,
       };
 
     case LOADING_SESSION:
