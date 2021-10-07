@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-import { IUserRequest } from "../types";
+import { IUserRequest, Settings } from "../types";
 
 export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
   transports: ["websocket", "polling"],
@@ -72,6 +72,10 @@ function exit() {
   socketIO.emit("exit");
 }
 
+function updateSettings(setting: Settings, value: unknown) {
+  socketIO.emit("update", { [setting]: value });
+}
+
 export const socket = {
   send,
   check,
@@ -80,4 +84,5 @@ export const socket = {
   kick,
   kickForUserNotification,
   exit,
+  updateSettings,
 };

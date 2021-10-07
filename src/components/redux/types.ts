@@ -7,6 +7,9 @@ export type IResponse = {
   issues: IIssueCard[];
   settings: IGameSettings;
   cards: string[];
+  roundTime: number;
+  autoLogin: boolean;
+  flipCards: boolean;
 };
 
 export type IStore = {

@@ -1,5 +1,7 @@
 import { IStore } from "./types";
 
+export const selectState = (state: IStore) => state;
+
 export const selectUsers = (state: IStore) => state.users;
 
 export const selectIssues = (state: IStore) => state.issues;
