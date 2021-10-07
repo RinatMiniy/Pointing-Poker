@@ -50,6 +50,7 @@ export enum Settings {
   issues = "issues",
   settings = "settings",
   cards = "cards",
+  game = "game",
 }
 
 export type IIssueCard = {

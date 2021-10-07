@@ -175,6 +175,10 @@ export const LobbyDealer: React.FC = () => {
     }
   };
 
+  const handleStartGame = () => {
+    socket.runGame();
+  };
+
   return (
     <>
       <div className={styles.lobby}>
@@ -220,7 +224,11 @@ export const LobbyDealer: React.FC = () => {
         </div>
 
         <div className={styles.gameControls}>
-          <Button text="start game" isPrimary={true} />
+          <Button
+            text="start game"
+            isPrimary={true}
+            onClick={handleStartGame}
+          />
           <Button text="cancel game" />
         </div>
 

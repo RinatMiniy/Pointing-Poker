@@ -10,6 +10,16 @@ export type IResponse = {
   roundTime: number;
   autoLogin: boolean;
   flipCards: boolean;
+  game: IGame;
+};
+
+export type IGame = {
+  runGame: boolean;
+  endGame: boolean;
+  runRound: boolean;
+  endRound: boolean;
+  time: 0;
+  issue: 0;
 };
 
 export type IStore = {
@@ -24,4 +34,5 @@ export type IStore = {
   loaded: boolean;
   sessionExist: boolean;
   sessionConnectLoading: boolean;
+  game: IGame;
 };

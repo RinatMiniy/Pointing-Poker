@@ -76,6 +76,10 @@ function updateSettings(setting: Settings, value: unknown) {
   socketIO.emit("update", { [setting]: value });
 }
 
+function runGame() {
+  socketIO.emit("runGame");
+}
+
 export const socket = {
   send,
   check,
@@ -85,4 +89,5 @@ export const socket = {
   kickForUserNotification,
   exit,
   updateSettings,
+  runGame,
 };
