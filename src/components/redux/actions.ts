@@ -1,4 +1,4 @@
-import { IIssueCard, IUser, IUserRequest, Settings } from "../../types";
+import { IIssueCard, IUserRequest, Settings } from "../../types";
 import { socket } from "../../api/socket";
 import { Dispatch } from "redux";
 import { IResponse } from "./types";
@@ -9,8 +9,6 @@ export const LOADING_SESSION = "LOADING_SESSION";
 export const LOADED_SESSION = "LOADED_SESSION";
 export const UPDATE_ISSUE = "UPDATE_ISSUE";
 export const DELETE_ISSUE = "DELETE_ISSUE";
-export const UPDATE_VALUE_CARD = "UPDATE_VALUE_CARD";
-export const GET_USERS = "GET_USERS";
 
 export const SESSION_EXIST = "SESSION_EXIST";
 export const SESSION_CONNECT_LOADING = "SESSION_CONNECT_LOADING";
@@ -57,13 +55,6 @@ export type IDeleteIssue = {
   };
 };
 
-export type IValueCard = {
-  type: typeof UPDATE_VALUE_CARD;
-  payload: {
-    card: { id: number; value: string };
-  };
-};
-
 export type ISessionConnect = {
   type: typeof SESSION_EXIST;
   payload: {
@@ -78,13 +69,6 @@ export type ISessionConnectLoading = {
   };
 };
 
-export type IGetUsers = {
-  type: typeof GET_USERS;
-  payload: {
-    users: IUser[];
-  };
-};
-
 export type IUnion =
   | IGetSession
   | IGetSessionError
@@ -92,10 +76,8 @@ export type IUnion =
   | ILoadedSession
   | IUpdateIssue
   | IDeleteIssue
-  | IValueCard
   | ISessionConnect
-  | ISessionConnectLoading
-  | IGetUsers;
+  | ISessionConnectLoading;
 
 export const getSession = (session: IResponse): IGetSession => ({
   type: GET_SESSION,
@@ -139,16 +121,6 @@ export const deleteIssue = (id: number): IDeleteIssue => ({
   },
 });
 
-export const updateValueCard = (params: {
-  id: number;
-  value: string;
-}): IValueCard => ({
-  type: UPDATE_VALUE_CARD,
-  payload: {
-    card: { id: params.id, value: params.value },
-  },
-});
-
 export const sessionConnect = (sessionExist: boolean): ISessionConnect => ({
   type: SESSION_EXIST,
   payload: {
@@ -162,13 +134,6 @@ export const sessionConnectLoading = (
   type: SESSION_CONNECT_LOADING,
   payload: {
     sessionConnectLoading,
-  },
-});
-
-export const getUsers = (users: IUser[]): IGetUsers => ({
-  type: GET_USERS,
-  payload: {
-    users,
   },
 });
 

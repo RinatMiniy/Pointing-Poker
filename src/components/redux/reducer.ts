@@ -10,8 +10,6 @@ import {
   DELETE_ISSUE,
   SESSION_EXIST,
   SESSION_CONNECT_LOADING,
-  GET_USERS,
-  UPDATE_VALUE_CARD,
 } from "./actions";
 import { IStore } from "./types";
 
@@ -45,6 +43,8 @@ const initialState: IStore = {
     time: 0,
     issue: 0,
   },
+  voting: [],
+  chat: [],
 };
 
 export function reducer(state: IStore = initialState, action: IUnion): IStore {
@@ -98,20 +98,6 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
       return {
         ...state,
         sessionConnectLoading: action.payload.sessionConnectLoading,
-      };
-
-    case GET_USERS:
-      return {
-        ...state,
-        users: action.payload.users,
-      };
-
-    case UPDATE_VALUE_CARD:
-      return {
-        ...state,
-        cards: state.cards.map((card, idx) =>
-          action.payload.card.id === idx ? action.payload.card.value : card
-        ),
       };
 
     default:
