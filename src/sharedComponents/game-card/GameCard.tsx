@@ -1,11 +1,12 @@
 import React from "react";
 import cn from "classnames";
+import { useDispatch } from "react-redux";
 import { EditorSvg } from "../../assets/editorSvg";
+import { useNotify } from "../../hooks/useNotify";
+import { updateValueCard } from "../../components/redux/actions";
+import { GameCardContainer } from "../game-card-container/GameCardContainer";
 
 import styles from "./game-card.module.scss";
-import { useNotify } from "../../hooks/useNotify";
-import { useDispatch } from "react-redux";
-import { updateValueCard } from "../../components/redux/actions";
 
 type IGameCardProps = {
   id: number;
@@ -43,10 +44,10 @@ export const GameCard: React.FC<IGameCardProps> = (props) => {
     }
   };
 
-  const isUnknown = !Number.isFinite(+value);
+  const isUnknown = !Number.isFinite(+value) && !parseInt(value);
 
   return (
-    <div className={styles.gameCard}>
+    <GameCardContainer>
       {!inputVisible && (
         <div className={styles.upperTitle}>
           <div
@@ -94,6 +95,6 @@ export const GameCard: React.FC<IGameCardProps> = (props) => {
           {value}
         </div>
       </div>
-    </div>
+    </GameCardContainer>
   );
 };

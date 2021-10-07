@@ -1,8 +1,9 @@
+/* eslint-disable jsx-a11y/no-onchange */
 import React from "react";
 import { Switcher } from "../../sharedComponents/switcher/Switcher";
 import { InputText } from "../../sharedComponents/inputText/InputText";
 import { TimeField } from "../time-field/TimeField";
-import { IGameSettings } from "../../types";
+import { IGameSettings, SetCards } from "../../types";
 
 import styles from "./game-settings.module.scss";
 import { GameCardsField } from "../../sharedComponents/game-cards-field/GameCardsField";
@@ -16,6 +17,10 @@ type NewType = {
   handleIsTimerNeed: () => void;
   handleScopeType: (e: React.ChangeEvent) => void;
   handleScopeTypeShort: (e: React.ChangeEvent) => void;
+  handleAutoLogin: (e: React.ChangeEvent) => void;
+  handleFlipCards: (e: React.ChangeEvent) => void;
+  handleChangeSetCards: (e: React.ChangeEvent) => void;
+  handleAddingCard: (value: string) => void;
 };
 
 type IGameSettingsProps = NewType;
@@ -43,6 +48,28 @@ export const GameSettings: React.FC<IGameSettingsProps> = (props) => {
           value={props.gameSettings.timer}
           onChange={props.handleIsTimerNeed}
         />
+      </div>
+      <div className={styles.item}>
+        <div className={styles.title}>Admit new members:</div>
+        <Switcher
+          value={props.gameSettings.autoLogin}
+          onChange={props.handleAutoLogin}
+        />
+      </div>
+      <div className={styles.item}>
+        <div className={styles.title}>Auto flip card:</div>
+        <Switcher
+          value={props.gameSettings.flipCards}
+          onChange={props.handleFlipCards}
+        />
+      </div>
+      <div className={styles.item}>
+        <div className={styles.title}>Set cards:</div>
+        <select onChange={props.handleChangeSetCards}>
+          {Object.keys(SetCards).map((key) => (
+            <option key={key}>{key}</option>
+          ))}
+        </select>
       </div>
       <div className={styles.item}>
         <InputText
@@ -74,6 +101,8 @@ export const GameSettings: React.FC<IGameSettingsProps> = (props) => {
       <GameCardsField
         cards={props.cards}
         sessionShortTitle={props.gameSettings.scoreTypeShort}
+        setCards={props.gameSettings.setCards}
+        handleAddingCard={props.handleAddingCard}
       />
     </div>
   );
