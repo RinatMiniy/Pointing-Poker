@@ -8,11 +8,24 @@ import { useDispatch } from "react-redux";
 import { requestSession } from "../../redux/actions";
 import { useNotify } from "../../../hooks/useNotify";
 import { ToastContainer } from "react-toastify";
+import { useLocation, useHistory } from "react-router-dom";
+
+interface ILocation {
+  state: {
+    hash?: string;
+    kick?: boolean;
+  };
+}
 
 export const MainPage: React.FC = () => {
+  const history = useHistory();
+  const location: ILocation = useLocation();
+
   const [openRegistration, setOpenRegistration] = React.useState(false);
   const [isMaster, setIsMaster] = React.useState(false);
-  const [link, setLink] = React.useState("");
+  const [link, setLink] = React.useState(
+    location.state && location.state.hash ? location.state.hash : ""
+  );
 
   const dispatch = useDispatch();
 
@@ -38,6 +51,23 @@ export const MainPage: React.FC = () => {
       notify({ type: "error", message: "Unexpected error" });
     }
   };
+
+  React.useEffect(() => {
+    if (location.state) {
+      if (location.state.hash) {
+        history.replace({
+          state: null,
+        });
+        onConnect();
+      }
+      if (location.state.kick) {
+        history.replace({
+          state: null,
+        });
+        notify({ type: "error", message: "You were kicked" });
+      }
+    }
+  }, []);
 
   return (
     <div className={styles.mainPage}>

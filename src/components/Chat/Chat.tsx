@@ -28,8 +28,6 @@ export const Chat: React.FC = () => {
   const activeUser = users.find((user) => user.socket === socketIO.id);
   const dealer = users.find((user) => user.role === "dealer");
 
-  console.log(chat);
-
   const {
     register,
     handleSubmit,

@@ -2,7 +2,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { useNotify } from "../../../../hooks/useNotify";
 import { H1 } from "../../../../sharedComponents/h1/H1";
 import { Button } from "../../../../sharedComponents/button/button";
 import { PlayerCard } from "../../../player-card/PlayerCard";
@@ -25,15 +24,10 @@ export const LobbyPlayer: React.FC = () => {
   const sessionTitle = useSelector(selectSessionTitle);
   const dealer = users.find((user) => user.role === "dealer");
 
-  const notify = useNotify();
   const chatOpen = useSelector(selectChatOpen);
 
   socket.kickForUserNotification(() => {
-    notify({ type: "error", message: "You were kicked" });
-    setTimeout(() => {
-      debugger;
-      setDeletedUser(true);
-    }, 3000);
+    setDeletedUser(true);
   });
 
   const handleExit = () => {
@@ -69,7 +63,15 @@ export const LobbyPlayer: React.FC = () => {
           isMaster={false}
         />
 
-        {(isDeletedUser || isUserExit) && <Redirect to="/" />}
+        {isUserExit && <Redirect to="/" />}
+        {isDeletedUser && (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: { kick: true },
+            }}
+          />
+        )}
       </div>
       <Chat />
     </>
