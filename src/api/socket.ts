@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-import { IUserRequest, Settings } from "../types";
+import { IUser, IUserRequest, Settings } from "../types";
 
 export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
   transports: ["websocket", "polling"],
@@ -80,6 +80,10 @@ function runGame() {
   socketIO.emit("runGame");
 }
 
+function addMsgToChat(user: IUser, msg: string) {
+  socketIO.emit("addMsgToChat", user, msg);
+}
+
 export const socket = {
   send,
   check,
@@ -90,4 +94,5 @@ export const socket = {
   exit,
   updateSettings,
   runGame,
+  addMsgToChat,
 };

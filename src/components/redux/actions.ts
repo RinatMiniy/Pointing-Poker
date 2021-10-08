@@ -1,4 +1,4 @@
-import { IUserRequest, Settings } from "../../types";
+import { IUser, IUserRequest, Settings } from "../../types";
 import { socket } from "../../api/socket";
 import { Dispatch } from "redux";
 import { IResponse } from "./types";
@@ -10,6 +10,7 @@ export const LOADED_SESSION = "LOADED_SESSION";
 
 export const SESSION_EXIST = "SESSION_EXIST";
 export const SESSION_CONNECT_LOADING = "SESSION_CONNECT_LOADING";
+export const CHAT_OPEN = "CHAT_OPEN";
 
 export type IGetSessionError = {
   type: typeof GET_SESSION_ERROR;
@@ -53,13 +54,21 @@ export type ISessionConnectLoading = {
   };
 };
 
+export type IChatOpen = {
+  type: typeof CHAT_OPEN;
+  payload: {
+    chatOpen: boolean;
+  };
+};
+
 export type IUnion =
   | IGetSession
   | IGetSessionError
   | ILoadingSession
   | ILoadedSession
   | ISessionConnect
-  | ISessionConnectLoading;
+  | ISessionConnectLoading
+  | IChatOpen;
 
 export const getSession = (session: IResponse): IGetSession => ({
   type: GET_SESSION,
@@ -102,6 +111,13 @@ export const sessionConnectLoading = (
   type: SESSION_CONNECT_LOADING,
   payload: {
     sessionConnectLoading,
+  },
+});
+
+export const changeChatOpen = (chatOpen: boolean): IChatOpen => ({
+  type: CHAT_OPEN,
+  payload: {
+    chatOpen,
   },
 });
 
@@ -179,4 +195,8 @@ export const requestLogin = (params: { hash: string; user: IUserRequest }) => {
 
 export const requestUpdate = (setting: Settings, value: unknown) => {
   socket.updateSettings(setting, value);
+};
+
+export const requestMsgToChat = (user: IUser, msg: string) => {
+  socket.addMsgToChat(user, msg);
 };

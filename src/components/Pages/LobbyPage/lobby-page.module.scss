@@ -6,6 +6,11 @@
   padding: 0 36px 0;
 }
 
+.lobby_chat {
+  composes: lobby;
+  justify-self: left;
+}
+
 .mainTitle {
   display: flex;
   justify-content: center;

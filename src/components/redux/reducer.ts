@@ -8,6 +8,7 @@ import {
   LOADED_SESSION,
   SESSION_EXIST,
   SESSION_CONNECT_LOADING,
+  CHAT_OPEN,
 } from "./actions";
 import { IStore } from "./types";
 
@@ -43,6 +44,7 @@ const initialState: IStore = {
   },
   voting: [],
   chat: [],
+  chatOpen: false,
 };
 
 export function reducer(state: IStore = initialState, action: IUnion): IStore {
@@ -82,6 +84,12 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
       return {
         ...state,
         sessionConnectLoading: action.payload.sessionConnectLoading,
+      };
+
+    case CHAT_OPEN:
+      return {
+        ...state,
+        chatOpen: action.payload.chatOpen,
       };
 
     default:
