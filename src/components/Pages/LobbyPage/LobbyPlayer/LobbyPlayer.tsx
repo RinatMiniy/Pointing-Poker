@@ -7,7 +7,12 @@ import { H1 } from "../../../../sharedComponents/h1/H1";
 import { Button } from "../../../../sharedComponents/button/button";
 import { PlayerCard } from "../../../player-card/PlayerCard";
 import { Members } from "../../../../sharedComponents/members/Members";
-import { selectSessionTitle, selectUsers } from "../../../redux/selectors";
+import { Chat } from "../../../Chat/Chat";
+import {
+  selectSessionTitle,
+  selectUsers,
+  selectChatOpen,
+} from "../../../redux/selectors";
 import { socket } from "../../../../api/socket";
 
 import styles from "../lobby-page.module.scss";
@@ -21,6 +26,7 @@ export const LobbyPlayer: React.FC = () => {
   const dealer = users.find((user) => user.role === "dealer");
 
   const notify = useNotify();
+  const chatOpen = useSelector(selectChatOpen);
 
   socket.kickForUserNotification(() => {
     notify({ type: "error", message: "You were kicked" });
@@ -37,7 +43,7 @@ export const LobbyPlayer: React.FC = () => {
 
   return (
     <>
-      <div className={styles.lobby}>
+      <div className={chatOpen ? styles.lobby_chat : styles.lobby}>
         <div className={styles.mainTitle}>
           <H1 text={sessionTitle} />
         </div>
@@ -65,6 +71,7 @@ export const LobbyPlayer: React.FC = () => {
 
         {(isDeletedUser || isUserExit) && <Redirect to="/" />}
       </div>
+      <Chat />
     </>
   );
 };

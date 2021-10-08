@@ -1,4 +1,4 @@
-import { IUserRequest, Settings } from "../../types";
+import { IUser, IUserRequest, Settings } from "../../types";
 import { socket } from "../../api/socket";
 import { Dispatch } from "redux";
 import { IResponse } from "./types";
@@ -195,4 +195,8 @@ export const requestLogin = (params: { hash: string; user: IUserRequest }) => {
 
 export const requestUpdate = (setting: Settings, value: unknown) => {
   socket.updateSettings(setting, value);
+};
+
+export const requestMsgToChat = (user: IUser, msg: string) => {
+  socket.addMsgToChat(user, msg);
 };
