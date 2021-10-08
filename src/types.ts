@@ -43,10 +43,16 @@ export enum Priority {
   high = "high",
 }
 
+export type ICards = {
+  userId: string;
+  cardValue: string;
+};
+
 export type IIssueCard = {
   id: number;
   title: string;
   priority: Priority;
+  cards?: ICards[];
 };
 
 export type IGameSettings = {
@@ -56,4 +62,13 @@ export type IGameSettings = {
   scoreType: string;
   scoreTypeShort: string;
   timer: boolean;
+};
+
+export type IGame = {
+  runGame: boolean;
+  endGame: boolean;
+  runRound: boolean;
+  endRound: boolean;
+  time: number;
+  issue: number;
 };

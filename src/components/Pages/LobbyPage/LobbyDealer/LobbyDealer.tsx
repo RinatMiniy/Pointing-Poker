@@ -179,7 +179,7 @@ export const LobbyDealer: React.FC = () => {
         </div>
 
         <div className={styles.gameControls}>
-          <Button text="start game" isPrimary={true} />
+          <Button text="start game" isPrimary={true} onClick={socket.runGame} />
           <Button text="cancel game" />
         </div>
 

@@ -39,6 +39,14 @@ const initialState: IStore = {
   loaded: false,
   sessionExist: false,
   sessionConnectLoading: false,
+  game: {
+    runGame: false,
+    endGame: false,
+    runRound: false,
+    endRound: false,
+    time: 0,
+    issue: 0,
+  },
 };
 
 export function reducer(state: IStore = initialState, action: IUnion): IStore {

@@ -305,6 +305,7 @@ export const requestRegistry = (params: { user: IUserRequest }) => {
 
       socket.subscribeToUpdates<IResponse>((data) => {
         dispatch(getUsers(data.users));
+        dispatch(getSession(data));
       });
     } catch (e) {
       dispatch(getSessionError(e.message));

@@ -1,20 +1,32 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
-import { selectUsers } from "../../redux/selectors";
-import { socketIO } from "../../../api/socket";
+import { selectAll, selectUsers } from "../../redux/selectors";
+import { socket, socketIO } from "../../../api/socket";
 import { LobbyDealer } from "./LobbyDealer/LobbyDealer";
 import { LobbyPlayer } from "./LobbyPlayer/LobbyPlayer";
+import { Game } from "../../Game/Game";
 
 export const LobbyPage: React.FC = () => {
   const users = useSelector(selectUsers);
+  const all = useSelector(selectAll);
 
   const dealer = users.find((user) => user.role === "dealer");
   const isDelear = dealer.socket === socketIO.id;
 
   return (
     <>
-      {isDelear ? <LobbyDealer /> : <LobbyPlayer />}{" "}
+      {!all.game.runGame ? (
+        isDelear ? (
+          <LobbyDealer />
+        ) : (
+          <LobbyPlayer />
+        )
+      ) : (
+        <Game />
+      )}{" "}
+      <button onClick={socket.runGame}>dsadas </button>
+      {console.log(all)}
       <ToastContainer
         position="top-right"
         autoClose={5000}

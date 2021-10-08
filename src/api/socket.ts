@@ -1,13 +1,13 @@
 import io from "socket.io-client";
 import { IUserRequest } from "../types";
 
-export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
-  transports: ["websocket", "polling"],
-});
-
-// export const socketIO = io("http://localhost:3000", {
+// export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
 //   transports: ["websocket", "polling"],
 // });
+
+export const socketIO = io("http://localhost:3000", {
+  transports: ["websocket", "polling"],
+});
 
 interface ISendCreate {
   type: "create";
@@ -72,6 +72,14 @@ function exit() {
   socketIO.emit("exit");
 }
 
+function runGame() {
+  socketIO.emit("runGame");
+}
+
+function runRound() {
+  socketIO.emit("runRound");
+}
+
 export const socket = {
   send,
   check,
@@ -80,4 +88,6 @@ export const socket = {
   kick,
   kickForUserNotification,
   exit,
+  runGame,
+  runRound,
 };

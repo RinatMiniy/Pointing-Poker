@@ -1,4 +1,4 @@
-import { IUser, IIssueCard, IGameSettings } from "../../types";
+import { IUser, IIssueCard, IGameSettings, IGame } from "../../types";
 
 export type IResponse = {
   title: string;
@@ -19,4 +19,5 @@ export type IStore = {
   loaded: boolean;
   sessionExist: boolean;
   sessionConnectLoading: boolean;
+  game: IGame;
 };

@@ -17,3 +17,7 @@ export const selectLoading = (state: IStore) => state.loading;
 export const selectLoaded = (state: IStore) => state.loaded;
 
 export const selectSessionExist = (state: IStore) => state.sessionExist;
+
+export const selectGame = (state: IStore) => state.game;
+
+export const selectAll = (state: IStore) => state;
