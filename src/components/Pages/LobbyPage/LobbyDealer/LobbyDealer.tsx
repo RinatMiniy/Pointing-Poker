@@ -10,6 +10,7 @@ import { Members } from "../../../../sharedComponents/members/Members";
 import { Priority, Settings } from "../../../../types";
 import { GameSettings } from "../../../game-settings/GameSettings";
 import { Issues } from "../../../issues/Issues";
+import { Chat } from "../../../Chat/Chat";
 import {
   selectCards,
   selectIssues,
@@ -17,6 +18,7 @@ import {
   selectSessionTitle,
   selectSettings,
   selectUsers,
+  selectChatOpen,
 } from "../../../redux/selectors";
 import {
   deleteIssue,
@@ -47,6 +49,7 @@ export const LobbyDealer: React.FC = () => {
   const [inputVisible, setInputVisible] = React.useState(false);
 
   const notify = useNotify();
+  const chatOpen = useSelector(selectChatOpen);
 
   const handleSessionName = (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement;
@@ -181,7 +184,7 @@ export const LobbyDealer: React.FC = () => {
 
   return (
     <>
-      <div className={styles.lobby}>
+      <div className={chatOpen ? styles.lobby_chat : styles.lobby}>
         {!inputVisible && (
           <div className={styles.mainTitle}>
             <H1 text={sessionTitle} />
@@ -265,6 +268,7 @@ export const LobbyDealer: React.FC = () => {
           cards={cards}
         />
       </div>
+      <Chat />
     </>
   );
 };
