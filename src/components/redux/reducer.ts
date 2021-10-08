@@ -6,8 +6,6 @@ import {
   GET_SESSION_ERROR,
   LOADING_SESSION,
   LOADED_SESSION,
-  UPDATE_ISSUE,
-  DELETE_ISSUE,
   SESSION_EXIST,
   SESSION_CONNECT_LOADING,
 } from "./actions";
@@ -71,20 +69,6 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
       return {
         ...state,
         error: action.payload.error,
-      };
-
-    case UPDATE_ISSUE:
-      return {
-        ...state,
-        issues: state.issues.map((issue) =>
-          issue.id === action.payload.issue.id ? action.payload.issue : issue
-        ),
-      };
-
-    case DELETE_ISSUE:
-      return {
-        ...state,
-        issues: state.issues.filter((issue) => issue.id !== action.payload.id),
       };
 
     case SESSION_EXIST: {

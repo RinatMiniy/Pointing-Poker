@@ -1,4 +1,4 @@
-import { IIssueCard, IUserRequest, Settings } from "../../types";
+import { IUserRequest, Settings } from "../../types";
 import { socket } from "../../api/socket";
 import { Dispatch } from "redux";
 import { IResponse } from "./types";
@@ -7,8 +7,6 @@ export const GET_SESSION = "GET_SESSION";
 export const GET_SESSION_ERROR = "GET_SESSION_ERROR";
 export const LOADING_SESSION = "LOADING_SESSION";
 export const LOADED_SESSION = "LOADED_SESSION";
-export const UPDATE_ISSUE = "UPDATE_ISSUE";
-export const DELETE_ISSUE = "DELETE_ISSUE";
 
 export const SESSION_EXIST = "SESSION_EXIST";
 export const SESSION_CONNECT_LOADING = "SESSION_CONNECT_LOADING";
@@ -41,20 +39,6 @@ export type ILoadedSession = {
   };
 };
 
-export type IUpdateIssue = {
-  type: typeof UPDATE_ISSUE;
-  payload: {
-    issue: IIssueCard;
-  };
-};
-
-export type IDeleteIssue = {
-  type: typeof DELETE_ISSUE;
-  payload: {
-    id: number;
-  };
-};
-
 export type ISessionConnect = {
   type: typeof SESSION_EXIST;
   payload: {
@@ -74,8 +58,6 @@ export type IUnion =
   | IGetSessionError
   | ILoadingSession
   | ILoadedSession
-  | IUpdateIssue
-  | IDeleteIssue
   | ISessionConnect
   | ISessionConnectLoading;
 
@@ -104,20 +86,6 @@ export const loadedSession = (loaded: boolean): ILoadedSession => ({
   type: LOADED_SESSION,
   payload: {
     loaded,
-  },
-});
-
-export const updateIssue = (issue: IIssueCard): IUpdateIssue => ({
-  type: UPDATE_ISSUE,
-  payload: {
-    issue,
-  },
-});
-
-export const deleteIssue = (id: number): IDeleteIssue => ({
-  type: DELETE_ISSUE,
-  payload: {
-    id,
   },
 });
 
@@ -160,7 +128,6 @@ export const requestRegistry = (params: { user: IUserRequest }) => {
       dispatch(loadedSession(true));
 
       socket.subscribeToUpdates<IResponse>((data) => {
-        console.log(data);
         dispatch(getSession(data));
       });
     } catch (e) {

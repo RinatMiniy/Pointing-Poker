@@ -1,5 +1,6 @@
 import React from "react";
 import cn from "classnames";
+import { useNotify } from "../../hooks/useNotify";
 
 import styles from "./inputText.module.scss";
 
@@ -15,13 +16,19 @@ type FormItemProps = {
 
 export const InputText = React.forwardRef<HTMLElement, FormItemProps>(
   function FormItem(props, ref) {
+    const notify = useNotify();
+
+    if (props.error) {
+      notify({ type: "error", message: props.error });
+    }
+
     return (
       <>
         <label
           className={cn(styles.label, { [styles.errorLabel]: props.error })}
         >
           {props.field}
-          <div className={styles.label__error}>{props.error}</div>
+          {/* <div className={styles.label__error}>{props.error}</div> */}
         </label>
         <input
           ref={ref as React.ForwardedRef<HTMLInputElement>}
