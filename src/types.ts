@@ -44,16 +44,31 @@ export enum Priority {
 }
 
 export type ICards = {
-  userId: string;
+  userSocket: string;
   cardValue: string;
 };
+export enum Settings {
+  title = "title",
+  hash = "hash",
+  users = "users",
+  issues = "issues",
+  settings = "settings",
+  cards = "cards",
+  game = "game",
+}
 
 export type IIssueCard = {
   id: number;
   title: string;
   priority: Priority;
-  cards?: ICards[];
+  cards?: [];
 };
+
+export enum SetCards {
+  fibonacci = "fibonacci",
+  degreesTwo = "degreesTwo",
+  custom = "custom",
+}
 
 export type IGameSettings = {
   changingCard: boolean;
@@ -62,6 +77,9 @@ export type IGameSettings = {
   scoreType: string;
   scoreTypeShort: string;
   timer: boolean;
+  autoLogin: boolean;
+  flipCards: boolean;
+  setCards: SetCards;
 };
 
 export type IGame = {

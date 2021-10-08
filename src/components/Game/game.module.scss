@@ -21,7 +21,6 @@
 }
 
 .memberList {
-  min-width: 100%;
   border-left: 1px solid rgba(0, 0, 0, 0.5);
 }
 
@@ -33,4 +32,20 @@
 
 .btnBlock {
   padding: 15px 65px;
+}
+
+.issuesContainer {
+  width: 300px;
+}
+
+.cards {
+  display: flex;
+}
+
+.memberList {
+  display: flex;
+}
+
+.columnScore {
+  width: 200px;
 }

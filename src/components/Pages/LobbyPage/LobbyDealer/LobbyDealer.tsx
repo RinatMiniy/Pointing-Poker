@@ -7,12 +7,11 @@ import { InputText } from "../../../../sharedComponents/inputText/InputText";
 import { Button } from "../../../../sharedComponents/button/button";
 import { PlayerCard } from "../../../player-card/PlayerCard";
 import { Members } from "../../../../sharedComponents/members/Members";
-import { Priority } from "../../../../types";
+import { Priority, Settings } from "../../../../types";
 import { GameSettings } from "../../../game-settings/GameSettings";
-
-import styles from "../lobby-page.module.scss";
 import { Issues } from "../../../issues/Issues";
 import {
+  selectCards,
   selectIssues,
   selectSessionHash,
   selectSessionTitle,
@@ -20,34 +19,28 @@ import {
   selectUsers,
 } from "../../../redux/selectors";
 import {
-  changingCard,
-  createIssue,
   deleteIssue,
-  masterPlayer,
   updateIssue,
-  updateTitle,
-  timer,
-  scoreType,
-  scoreTypeShort,
-  roundTime,
+  requestUpdate,
 } from "../../../redux/actions";
 import { socket } from "../../../../api/socket";
 
+import styles from "../lobby-page.module.scss";
+
 export const LobbyDealer: React.FC = () => {
   const dispatch = useDispatch();
+
   const users = useSelector(selectUsers);
-
   const issues = useSelector(selectIssues);
-
   const gameSettings = useSelector(selectSettings);
+  const cards = useSelector(selectCards);
+  const link = `http://pockerplanning.chttp://${useSelector(
+    selectSessionHash
+  )}`;
 
   const [sessionTitle, setSessionTitle] = React.useState(
     useSelector(selectSessionTitle)
   );
-
-  const link = `http://pockerplanning.chttp://${useSelector(
-    selectSessionHash
-  )}`;
 
   const dealer = users.find((user) => user.role === "dealer");
 
@@ -63,7 +56,7 @@ export const LobbyDealer: React.FC = () => {
   const onSubmitSessionName = () => {
     if (sessionTitle) {
       setInputVisible(false);
-      dispatch(updateTitle(sessionTitle));
+      requestUpdate(Settings.title, sessionTitle);
     } else {
       notify({
         type: "error",
@@ -100,7 +93,7 @@ export const LobbyDealer: React.FC = () => {
   const onConfirmCreate = (title: string, priority: Priority) => {
     const id = new Date().getTime();
     if (title) {
-      dispatch(createIssue({ id, title, priority }));
+      requestUpdate(Settings.issues, issues.concat({ id, title, priority }));
       notify({ type: "success", message: "Success" });
     } else {
       notify({ type: "error", message: "Name should be set!" });
@@ -109,29 +102,81 @@ export const LobbyDealer: React.FC = () => {
 
   const onSetTimer = (time: { min: number; sec: number }) => {
     const value = time.min * 60 + time.sec;
-    dispatch(roundTime(value));
+    requestUpdate(Settings.settings, { ...gameSettings, roundTime: value });
   };
 
   const handlerScrumIsPlayer = () => {
-    dispatch(masterPlayer(!gameSettings.masterPlayer));
+    requestUpdate(Settings.settings, {
+      ...gameSettings,
+      masterPlayer: !gameSettings.masterPlayer,
+    });
   };
 
   const handleChangeCardInEnd = () => {
-    dispatch(changingCard(!gameSettings.changingCard));
+    requestUpdate(Settings.settings, {
+      ...gameSettings,
+      changingCard: !gameSettings.changingCard,
+    });
   };
 
   const handleIsTimerNeed = () => {
-    dispatch(timer(!gameSettings.timer));
+    requestUpdate(Settings.settings, {
+      ...gameSettings,
+      timer: !gameSettings.timer,
+    });
+  };
+
+  const handleAutoLogin = () => {
+    requestUpdate(Settings.settings, {
+      ...gameSettings,
+      autoLogin: !gameSettings.autoLogin,
+    });
+  };
+
+  const handleFlipCards = () => {
+    requestUpdate(Settings.settings, {
+      ...gameSettings,
+      flipCards: !gameSettings.flipCards,
+    });
   };
 
   const handleScopeType = (e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement;
-    dispatch(scoreType(target.value));
+    requestUpdate(Settings.settings, {
+      ...gameSettings,
+      scoreType: target.value,
+    });
   };
 
   const handleScopeTypeShort = (e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement;
-    dispatch(scoreTypeShort(target.value));
+    requestUpdate(Settings.settings, {
+      ...gameSettings,
+      scoreTypeShort: target.value,
+    });
+  };
+
+  const handleChangeSetCards = (e: React.ChangeEvent) => {
+    const target = e.target as HTMLSelectElement;
+    requestUpdate(Settings.settings, {
+      ...gameSettings,
+      setCards: target.value,
+    });
+  };
+
+  const handleAddingCard = (value) => {
+    if (!value) {
+      notify({ type: "error", message: "Value should be set!" });
+    } else if (cards.includes(value)) {
+      notify({ type: "error", message: "This value already exists" });
+    } else {
+      notify({ type: "success", message: "Success!" });
+      requestUpdate(Settings.cards, cards.concat(value));
+    }
+  };
+
+  const handleStartGame = () => {
+    socket.runGame();
   };
 
   return (
@@ -179,7 +224,11 @@ export const LobbyDealer: React.FC = () => {
         </div>
 
         <div className={styles.gameControls}>
-          <Button text="start game" isPrimary={true} onClick={socket.runGame} />
+          <Button
+            text="start game"
+            isPrimary={true}
+            onClick={handleStartGame}
+          />
           <Button text="cancel game" />
         </div>
 
@@ -209,9 +258,13 @@ export const LobbyDealer: React.FC = () => {
           handleIsTimerNeed={handleIsTimerNeed}
           handleScopeType={handleScopeType}
           handleScopeTypeShort={handleScopeTypeShort}
+          handleAutoLogin={handleAutoLogin}
+          handleFlipCards={handleFlipCards}
+          handleChangeSetCards={handleChangeSetCards}
+          handleAddingCard={handleAddingCard}
+          cards={cards}
         />
       </div>
-      )
     </>
   );
 };

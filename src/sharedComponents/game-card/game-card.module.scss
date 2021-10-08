@@ -1,0 +1,45 @@
+.upperTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  svg {
+    width: 18px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+
+  input {
+    width: calc(100% - 20px);
+    padding: 2px 5px;
+  }
+}
+
+.value {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: calc(100%-20px);
+  overflow: hidden;
+}
+
+.valueText {
+  font-size: 10px;
+}
+
+.gameName {
+  font-size: 56px;
+  text-align: center;
+
+  svg {
+    width: 56px;
+  }
+}
+
+.lowTitle {
+  transform: rotate(180deg);
+}

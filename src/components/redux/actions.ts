@@ -1,4 +1,4 @@
-import { IIssueCard, IUser, IUserRequest } from "../../types";
+import { IIssueCard, IUserRequest, Settings } from "../../types";
 import { socket } from "../../api/socket";
 import { Dispatch } from "redux";
 import { IResponse } from "./types";
@@ -7,17 +7,8 @@ export const GET_SESSION = "GET_SESSION";
 export const GET_SESSION_ERROR = "GET_SESSION_ERROR";
 export const LOADING_SESSION = "LOADING_SESSION";
 export const LOADED_SESSION = "LOADED_SESSION";
-export const UPDATE_TITLE = "UPDATE_TITLE";
-export const CREATE_ISSUE = "CREATE_ISSUE";
 export const UPDATE_ISSUE = "UPDATE_ISSUE";
 export const DELETE_ISSUE = "DELETE_ISSUE";
-export const MASTER_PLAYER = "MASTER_PLAYER";
-export const CHANGING_CARD = "CHANGING_CARD";
-export const TIMER = "TIMER";
-export const SCORE_TYPE = "SCORE_TYPE";
-export const SCORE_TYPE_SHORT = "SCORE_TYPE_SHORT";
-export const ROUND_TIME = "ROUND_TIME";
-export const GET_USERS = "GET_USERS";
 
 export const SESSION_EXIST = "SESSION_EXIST";
 export const SESSION_CONNECT_LOADING = "SESSION_CONNECT_LOADING";
@@ -50,20 +41,6 @@ export type ILoadedSession = {
   };
 };
 
-export type IUpdateTitle = {
-  type: typeof UPDATE_TITLE;
-  payload: {
-    title: string;
-  };
-};
-
-export type ICreateIssue = {
-  type: typeof CREATE_ISSUE;
-  payload: {
-    issue: IIssueCard;
-  };
-};
-
 export type IUpdateIssue = {
   type: typeof UPDATE_ISSUE;
   payload: {
@@ -75,48 +52,6 @@ export type IDeleteIssue = {
   type: typeof DELETE_ISSUE;
   payload: {
     id: number;
-  };
-};
-
-export type IMasterPlayer = {
-  type: typeof MASTER_PLAYER;
-  payload: {
-    masterPlayer: boolean;
-  };
-};
-
-export type IChangingCard = {
-  type: typeof CHANGING_CARD;
-  payload: {
-    changingCard: boolean;
-  };
-};
-
-export type ITimer = {
-  type: typeof TIMER;
-  payload: {
-    timer: boolean;
-  };
-};
-
-export type IScoreType = {
-  type: typeof SCORE_TYPE;
-  payload: {
-    scoreType: string;
-  };
-};
-
-export type IScoreTypeShort = {
-  type: typeof SCORE_TYPE_SHORT;
-  payload: {
-    scoreTypeShort: string;
-  };
-};
-
-export type IRoundTime = {
-  type: typeof ROUND_TIME;
-  payload: {
-    roundTime: number;
   };
 };
 
@@ -134,31 +69,15 @@ export type ISessionConnectLoading = {
   };
 };
 
-export type IGetUsers = {
-  type: typeof GET_USERS;
-  payload: {
-    users: IUser[];
-  };
-};
-
 export type IUnion =
   | IGetSession
-  | IUpdateTitle
   | IGetSessionError
   | ILoadingSession
   | ILoadedSession
-  | ICreateIssue
   | IUpdateIssue
   | IDeleteIssue
-  | IMasterPlayer
-  | IChangingCard
-  | ITimer
-  | IScoreType
-  | IScoreTypeShort
-  | IRoundTime
   | ISessionConnect
-  | ISessionConnectLoading
-  | IGetUsers;
+  | ISessionConnectLoading;
 
 export const getSession = (session: IResponse): IGetSession => ({
   type: GET_SESSION,
@@ -188,20 +107,6 @@ export const loadedSession = (loaded: boolean): ILoadedSession => ({
   },
 });
 
-export const updateTitle = (title: string): IUpdateTitle => ({
-  type: UPDATE_TITLE,
-  payload: {
-    title,
-  },
-});
-
-export const createIssue = (issue: IIssueCard): ICreateIssue => ({
-  type: CREATE_ISSUE,
-  payload: {
-    issue,
-  },
-});
-
 export const updateIssue = (issue: IIssueCard): IUpdateIssue => ({
   type: UPDATE_ISSUE,
   payload: {
@@ -213,48 +118,6 @@ export const deleteIssue = (id: number): IDeleteIssue => ({
   type: DELETE_ISSUE,
   payload: {
     id,
-  },
-});
-
-export const masterPlayer = (masterPlayer: boolean): IMasterPlayer => ({
-  type: MASTER_PLAYER,
-  payload: {
-    masterPlayer,
-  },
-});
-
-export const changingCard = (changingCard: boolean): IChangingCard => ({
-  type: CHANGING_CARD,
-  payload: {
-    changingCard,
-  },
-});
-
-export const timer = (timer: boolean): ITimer => ({
-  type: TIMER,
-  payload: {
-    timer,
-  },
-});
-
-export const scoreType = (scoreType: string): IScoreType => ({
-  type: SCORE_TYPE,
-  payload: {
-    scoreType,
-  },
-});
-
-export const scoreTypeShort = (scoreTypeShort: string): IScoreTypeShort => ({
-  type: SCORE_TYPE_SHORT,
-  payload: {
-    scoreTypeShort,
-  },
-});
-
-export const roundTime = (roundTime: number): IRoundTime => ({
-  type: ROUND_TIME,
-  payload: {
-    roundTime,
   },
 });
 
@@ -271,13 +134,6 @@ export const sessionConnectLoading = (
   type: SESSION_CONNECT_LOADING,
   payload: {
     sessionConnectLoading,
-  },
-});
-
-export const getUsers = (users: IUser[]): IGetUsers => ({
-  type: GET_USERS,
-  payload: {
-    users,
   },
 });
 
@@ -304,7 +160,7 @@ export const requestRegistry = (params: { user: IUserRequest }) => {
       dispatch(loadedSession(true));
 
       socket.subscribeToUpdates<IResponse>((data) => {
-        dispatch(getUsers(data.users));
+        console.log(data);
         dispatch(getSession(data));
       });
     } catch (e) {
@@ -328,7 +184,7 @@ export const requestSession = (params: { link: string }) => {
       dispatch(sessionConnect(response));
       return response;
     } catch (e) {
-      console.log(e);
+      dispatch(getSessionError(e.message));
     } finally {
       dispatch(sessionConnectLoading(false));
     }
@@ -352,4 +208,8 @@ export const requestLogin = (params: { hash: string; user: IUserRequest }) => {
       }
     });
   };
+};
+
+export const requestUpdate = (setting: Settings, value: unknown) => {
+  socket.updateSettings(setting, value);
 };

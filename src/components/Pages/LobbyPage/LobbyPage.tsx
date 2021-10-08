@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { selectAll, selectUsers } from "../../redux/selectors";
-import { socket, socketIO } from "../../../api/socket";
+import { socketIO } from "../../../api/socket";
 import { LobbyDealer } from "./LobbyDealer/LobbyDealer";
 import { LobbyPlayer } from "./LobbyPlayer/LobbyPlayer";
 import { Game } from "../../Game/Game";
@@ -24,9 +24,7 @@ export const LobbyPage: React.FC = () => {
         )
       ) : (
         <Game />
-      )}{" "}
-      <button onClick={socket.runGame}>dsadas </button>
-      {console.log(all)}
+      )}
       <ToastContainer
         position="top-right"
         autoClose={5000}

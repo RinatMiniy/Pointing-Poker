@@ -25,6 +25,7 @@ export const LobbyPlayer: React.FC = () => {
   socket.kickForUserNotification(() => {
     notify({ type: "error", message: "You were kicked" });
     setTimeout(() => {
+      debugger;
       setDeletedUser(true);
     }, 3000);
   });
@@ -62,7 +63,7 @@ export const LobbyPlayer: React.FC = () => {
           isMaster={false}
         />
 
-        {isDeletedUser || (isUserExit && <Redirect to="/" />)}
+        {(isDeletedUser || isUserExit) && <Redirect to="/" />}
       </div>
     </>
   );
