@@ -33,7 +33,13 @@ export const MainPage: React.FC = () => {
 
   const onInputLink = (e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement;
-    setLink(target.value);
+
+    if (target.value.indexOf("http") !== -1) {
+      const hash = target.value.split("/").reverse()[0];
+      setLink(hash);
+    } else {
+      setLink(target.value);
+    }
   };
 
   const onSendLink = async (link: string) => {
@@ -91,7 +97,7 @@ export const MainPage: React.FC = () => {
       </div>
       <h2 className={styles.mainTitle}>OR:</h2>
       <div className={styles.mainLabel}>
-        <p> Connect to lobby by URL:</p>
+        <p>Connect to lobby by URL or HASH:</p>
         <div className={styles.connectLobby}>
           <InputText field="" name="linkLobby" onChange={onInputLink} />
           <Button
