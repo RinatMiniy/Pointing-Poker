@@ -12,12 +12,13 @@ import {
   selectUsers,
   selectChatOpen,
 } from "../../../redux/selectors";
-import { socket } from "../../../../api/socket";
+import { socketIO, socket } from "../../../../api/socket";
 
 import styles from "../lobby-page.module.scss";
 
 export const LobbyPlayer: React.FC = () => {
   const users = useSelector(selectUsers);
+  const activeUser = users.find((user) => user.socket === socketIO.id);
   const [isDeletedUser, setDeletedUser] = React.useState(false);
   const [isUserExit, setUserExit] = React.useState(false);
 
@@ -60,6 +61,12 @@ export const LobbyPlayer: React.FC = () => {
         <H1 text="Members:" />
         <Members
           members={users.filter((user) => user.socket !== dealer.socket)}
+          onDelete={
+            activeUser.role === "player" && users.length > 3
+              ? (userSocket: string) =>
+                  socket.votingStart(activeUser.socket, userSocket)
+              : null
+          }
           isMaster={false}
         />
 

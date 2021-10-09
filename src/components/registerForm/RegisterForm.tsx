@@ -51,9 +51,18 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
     if (props.isMaster) {
       dispatch(requestRegistry({ user: { ...data, role: "delear" } }));
     } else {
-      dispatch(
-        requestLogin({ hash: props.hash, user: { ...data, role: "player" } })
-      );
+      if (data.observer) {
+        dispatch(
+          requestLogin({
+            hash: props.hash,
+            user: { ...data, role: "spectator" },
+          })
+        );
+      } else {
+        dispatch(
+          requestLogin({ hash: props.hash, user: { ...data, role: "player" } })
+        );
+      }
     }
 
     error
