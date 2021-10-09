@@ -88,6 +88,10 @@ function votingStart(whoSocket: string, whomSocket: string) {
   socketIO.emit("votingStart", whoSocket, whomSocket);
 }
 
+function vote(type: string) {
+  socketIO.emit("vote", type);
+}
+
 export const socket = {
   send,
   check,
@@ -100,4 +104,5 @@ export const socket = {
   runGame,
   addMsgToChat,
   votingStart,
+  vote,
 };

@@ -103,10 +103,12 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
             Choose file
           </label>
           <input type="file" id="fileInput" className={styles.fileInput} />
-          <div className={styles.observerWrapper}>
-            <div className={styles.label}>Connect as Observer</div>
-            <Switcher {...register("observer")} />
-          </div>
+          {!props.isMaster && (
+            <div className={styles.observerWrapper}>
+              <div className={styles.label}>Connect as Observer</div>
+              <Switcher {...register("observer")} />
+            </div>
+          )}
           <div className={styles.confirmButton}>
             <Button text="Confirm" isPrimary={true} />
             {loaded && (

@@ -31,7 +31,7 @@ export const PlayerCard: React.FC<IUser & IPlayerCard> = (props) => {
         </div>
         {props.job && <div className={styles.job}>{props.job}</div>}
       </div>
-      {props.role !== "dealer" && props.isMaster && (
+      {props.onDelete && props.role !== "dealer" && props.isMaster && (
         <svg
           className={styles.delete}
           onClick={() => props.onDelete(props.socket)}

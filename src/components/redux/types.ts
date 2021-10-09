@@ -11,7 +11,7 @@ export type IResponse = {
   autoLogin: boolean;
   flipCards: boolean;
   game: IGame;
-  voting: IVoting[];
+  voting: IVoting;
   chat: IMsgToChat[];
 };
 
