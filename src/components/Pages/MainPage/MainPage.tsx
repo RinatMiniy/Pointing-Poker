@@ -8,11 +8,24 @@ import { useDispatch } from "react-redux";
 import { requestSession } from "../../redux/actions";
 import { useNotify } from "../../../hooks/useNotify";
 import { ToastContainer } from "react-toastify";
+import { useLocation, useHistory } from "react-router-dom";
+
+interface ILocation {
+  state: {
+    hash?: string;
+    kick?: boolean;
+  };
+}
 
 export const MainPage: React.FC = () => {
+  const history = useHistory();
+  const location: ILocation = useLocation();
+
   const [openRegistration, setOpenRegistration] = React.useState(false);
   const [isMaster, setIsMaster] = React.useState(false);
-  const [link, setLink] = React.useState("");
+  const [link, setLink] = React.useState(
+    location.state && location.state.hash ? location.state.hash : ""
+  );
 
   const dispatch = useDispatch();
 
@@ -20,7 +33,13 @@ export const MainPage: React.FC = () => {
 
   const onInputLink = (e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement;
-    setLink(target.value);
+
+    if (target.value.indexOf("http") !== -1) {
+      const hash = target.value.split("/").reverse()[0];
+      setLink(hash);
+    } else {
+      setLink(target.value);
+    }
   };
 
   const onSendLink = async (link: string) => {
@@ -38,6 +57,23 @@ export const MainPage: React.FC = () => {
       notify({ type: "error", message: "Unexpected error" });
     }
   };
+
+  React.useEffect(() => {
+    if (location.state) {
+      if (location.state.hash) {
+        history.replace({
+          state: null,
+        });
+        onConnect();
+      }
+      if (location.state.kick) {
+        history.replace({
+          state: null,
+        });
+        notify({ type: "error", message: "You were kicked" });
+      }
+    }
+  }, []);
 
   return (
     <div className={styles.mainPage}>
@@ -61,7 +97,7 @@ export const MainPage: React.FC = () => {
       </div>
       <h2 className={styles.mainTitle}>OR:</h2>
       <div className={styles.mainLabel}>
-        <p> Connect to lobby by URL:</p>
+        <p>Connect to lobby by URL or HASH:</p>
         <div className={styles.connectLobby}>
           <InputText field="" name="linkLobby" onChange={onInputLink} />
           <Button

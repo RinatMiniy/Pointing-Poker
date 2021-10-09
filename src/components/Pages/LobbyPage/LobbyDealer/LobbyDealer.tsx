@@ -30,7 +30,7 @@ export const LobbyDealer: React.FC = () => {
   const issues = useSelector(selectIssues);
   const gameSettings = useSelector(selectSettings);
   const cards = useSelector(selectCards);
-  const link = `http://pockerplanning.chttp://${useSelector(
+  const link = `https://pointing-poker-team13.netlify.app/${useSelector(
     selectSessionHash
   )}`;
 
