@@ -9,7 +9,7 @@ export const LOADING_SESSION = "LOADING_SESSION";
 export const LOADED_SESSION = "LOADED_SESSION";
 export const UPDATE_ISSUE = "UPDATE_ISSUE";
 export const DELETE_ISSUE = "DELETE_ISSUE";
-
+export const RESET = "RESET";
 export const SESSION_EXIST = "SESSION_EXIST";
 export const SESSION_CONNECT_LOADING = "SESSION_CONNECT_LOADING";
 
@@ -69,6 +69,10 @@ export type ISessionConnectLoading = {
   };
 };
 
+export type IReset = {
+  type: typeof RESET;
+};
+
 export type IUnion =
   | IGetSession
   | IGetSessionError
@@ -77,7 +81,8 @@ export type IUnion =
   | IUpdateIssue
   | IDeleteIssue
   | ISessionConnect
-  | ISessionConnectLoading;
+  | ISessionConnectLoading
+  | IReset;
 
 export const getSession = (session: IResponse): IGetSession => ({
   type: GET_SESSION,
@@ -121,6 +126,10 @@ export const deleteIssue = (id: number): IDeleteIssue => ({
   },
 });
 
+export const reset = (): IReset => ({
+  type: RESET,
+});
+
 export const sessionConnect = (sessionExist: boolean): ISessionConnect => ({
   type: SESSION_EXIST,
   payload: {
@@ -138,6 +147,7 @@ export const sessionConnectLoading = (
 });
 
 export const requestRegistry = (params: { user: IUserRequest }) => {
+  console.log(params.user.avatar);
   return async (dispatch: Dispatch) => {
     dispatch(getSessionError(null));
     dispatch(loadingSession(true));

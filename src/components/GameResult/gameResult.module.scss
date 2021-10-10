@@ -1,0 +1,17 @@
+.issue {
+  display: flex;
+  width: 100%;
+}
+
+.title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.priority {
+  font-size: 10px;
+  color: rgb(116, 116, 116);
+  margin-top: 5px;
+}

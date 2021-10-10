@@ -4,6 +4,9 @@ import { IssueCard } from "../../sharedComponents/issue-card/issue-card/IssueCar
 import { CreateIssue } from "../../sharedComponents/issue-card/create-issue/CreateIssue";
 import { IIssueCard, Priority } from "../../types";
 import { NewIssueCard } from "../../sharedComponents/issue-card/new-issue-card/NewIssueCard";
+import { useSelector } from "react-redux";
+import { selectUsers } from "../redux/selectors";
+import { socketIO } from "../../api/socket";
 
 type IIssuesProps = {
   issues: IIssueCard[];
@@ -18,6 +21,10 @@ export const Issues: React.FC<IIssuesProps> = (props) => {
   const [isCreateIssue, setIsCreateIssue] = React.useState(false);
   const [newIssueTitle, setNewIssueTitle] = React.useState("");
   const [newIssuePriority, setNewIssuePriority] = React.useState(Priority.low);
+
+  const users = useSelector(selectUsers);
+  const dealer = users.find((user) => user.role === "dealer");
+  const isDelear = dealer.socket === socketIO.id;
 
   const onCreateIssueTitle = (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement;
@@ -50,18 +57,19 @@ export const Issues: React.FC<IIssuesProps> = (props) => {
           onChangePriority={props.onChangePriority}
         />
       ))}
-      {isCreateIssue ? (
-        <NewIssueCard
-          type="create"
-          priority={newIssuePriority}
-          onChange={onCreateIssueTitle}
-          onCancel={() => setIsCreateIssue(false)}
-          onChangePriority={onSetPriority}
-          onConfirmCreate={onConfirmCreate}
-        />
-      ) : (
-        <CreateIssue onClick={() => setIsCreateIssue(true)} />
-      )}
+      {isDelear &&
+        (isCreateIssue ? (
+          <NewIssueCard
+            type="create"
+            priority={newIssuePriority}
+            onChange={onCreateIssueTitle}
+            onCancel={() => setIsCreateIssue(false)}
+            onChangePriority={onSetPriority}
+            onConfirmCreate={onConfirmCreate}
+          />
+        ) : (
+          <CreateIssue onClick={() => setIsCreateIssue(true)} />
+        ))}
     </Grid>
   );
 };

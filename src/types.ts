@@ -16,7 +16,7 @@ export type IUserComplete = {
   socket: string;
   isActive: boolean;
   job?: string;
-  img?: string;
+  avatar?: string;
 };
 
 export type IUserRequest = {
@@ -32,7 +32,7 @@ export type ILoginRequest = {
   firstName: string;
   lastName: string;
   observer: boolean;
-  img?: string;
+  avatar?: string;
   job?: string;
   hash: string;
 };
@@ -61,7 +61,7 @@ export type IIssueCard = {
   id: number;
   title: string;
   priority: Priority;
-  cards?: [];
+  cards?: { userSocket: string; cardValue: string }[];
 };
 
 export enum SetCards {

@@ -20,6 +20,7 @@ export const PlayerCard: React.FC<IUser & IPlayerCard> = (props) => {
         isMiddleSize={true}
         firstName={props.firstName}
         lastName={props.lastName}
+        avatar={props.avatar}
       />
       <div className={styles.userInformation}>
         {isActive && <div className={styles.active}>It&apos;s you</div>}

@@ -7,10 +7,10 @@ import styles from "./issue-card.module.scss";
 import { EditorSvg } from "../../../assets/editorSvg";
 
 type IIssueCardProps = {
-  onChange: (id: number, title: string, priority: Priority) => void;
-  onConfirmUpdate: (title: string) => void;
-  onDelete: (id: number) => void;
-  onChangePriority: (id: number, title: string, priority: Priority) => void;
+  onChange?: (id: number, title: string, priority: Priority) => void;
+  onConfirmUpdate?: (title: string) => void;
+  onDelete?: (id: number) => void;
+  onChangePriority?: (id: number, title: string, priority: Priority) => void;
 };
 
 export const IssueCard: React.FC<IIssueCard & IIssueCardProps> = (props) => {

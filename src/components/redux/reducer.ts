@@ -10,6 +10,7 @@ import {
   DELETE_ISSUE,
   SESSION_EXIST,
   SESSION_CONNECT_LOADING,
+  RESET,
 } from "./actions";
 import { IStore } from "./types";
 
@@ -49,6 +50,9 @@ const initialState: IStore = {
 
 export function reducer(state: IStore = initialState, action: IUnion): IStore {
   switch (action.type) {
+    case RESET:
+      return initialState;
+
     case GET_SESSION:
       return {
         ...state,
