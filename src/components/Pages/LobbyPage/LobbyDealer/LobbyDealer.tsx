@@ -1,15 +1,16 @@
 /* eslint-disable jsx-a11y/aria-role */
 import React, { ChangeEvent } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNotify } from "../../../../hooks/useNotify";
 import { H1 } from "../../../../sharedComponents/h1/H1";
 import { InputText } from "../../../../sharedComponents/inputText/InputText";
 import { Button } from "../../../../sharedComponents/button/button";
 import { PlayerCard } from "../../../player-card/PlayerCard";
 import { Members } from "../../../../sharedComponents/members/Members";
-import { Priority, Settings } from "../../../../types";
+import { IIssueCard, Settings } from "../../../../types";
 import { GameSettings } from "../../../game-settings/GameSettings";
 import { Issues } from "../../../issues/Issues";
+import { Chat } from "../../../Chat/Chat";
 import {
   selectCards,
   selectIssues,
@@ -17,24 +18,20 @@ import {
   selectSessionTitle,
   selectSettings,
   selectUsers,
+  selectChatOpen,
 } from "../../../redux/selectors";
-import {
-  deleteIssue,
-  updateIssue,
-  requestUpdate,
-} from "../../../redux/actions";
+import { requestUpdate } from "../../../redux/actions";
 import { socket } from "../../../../api/socket";
 
 import styles from "../lobby-page.module.scss";
+import { Redirect } from "react-router-dom";
 
 export const LobbyDealer: React.FC = () => {
-  const dispatch = useDispatch();
-
   const users = useSelector(selectUsers);
   const issues = useSelector(selectIssues);
   const gameSettings = useSelector(selectSettings);
   const cards = useSelector(selectCards);
-  const link = `http://pockerplanning.chttp://${useSelector(
+  const link = `https://pointing-poker-team13.netlify.app/${useSelector(
     selectSessionHash
   )}`;
 
@@ -43,10 +40,16 @@ export const LobbyDealer: React.FC = () => {
   );
 
   const dealer = users.find((user) => user.role === "dealer");
-
   const [inputVisible, setInputVisible] = React.useState(false);
+  const [isExit, setExit] = React.useState(false);
 
   const notify = useNotify();
+  const chatOpen = useSelector(selectChatOpen);
+
+  const handleExit = () => {
+    socket.exit();
+    setExit(true);
+  };
 
   const handleSessionName = (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement;
@@ -72,32 +75,6 @@ export const LobbyDealer: React.FC = () => {
       type: "success",
       message: "Copy",
     });
-  };
-
-  const onChangeIssue = (id: number, title: string, priority: Priority) => {
-    dispatch(updateIssue({ id, title, priority }));
-  };
-
-  const onConfirmUpdate = (title: string) => {
-    if (title) {
-      notify({ type: "success", message: "Success" });
-    } else {
-      notify({ type: "error", message: "Name should be set!" });
-    }
-  };
-
-  const onChangePriority = (id: number, title: string, priority: Priority) => {
-    dispatch(updateIssue({ id, title, priority }));
-  };
-
-  const onConfirmCreate = (title: string, priority: Priority) => {
-    const id = new Date().getTime();
-    if (title) {
-      requestUpdate(Settings.issues, issues.concat({ id, title, priority }));
-      notify({ type: "success", message: "Success" });
-    } else {
-      notify({ type: "error", message: "Name should be set!" });
-    }
   };
 
   const onSetTimer = (time: { min: number; sec: number }) => {
@@ -179,9 +156,26 @@ export const LobbyDealer: React.FC = () => {
     socket.runGame();
   };
 
+  const handleCreateIssue = (issue: IIssueCard) => {
+    requestUpdate(Settings.issues, issues.concat(issue));
+  };
+
+  const handleDeleteIssue = (id: number) => {
+    const cloneIssues = [...issues];
+    cloneIssues.splice(id, 1);
+    requestUpdate(Settings.issues, cloneIssues);
+  };
+
+  const handleUpdateIssue = (id: number, newIssue: IIssueCard) => {
+    requestUpdate(
+      Settings.issues,
+      issues.map((issue, idx) => (idx === id ? newIssue : issue))
+    );
+  };
+
   return (
     <>
-      <div className={styles.lobby}>
+      <div className={chatOpen ? styles.lobby_chat : styles.lobby}>
         {!inputVisible && (
           <div className={styles.mainTitle}>
             <H1 text={sessionTitle} />
@@ -229,7 +223,7 @@ export const LobbyDealer: React.FC = () => {
             isPrimary={true}
             onClick={handleStartGame}
           />
-          <Button text="cancel game" />
+          <Button text="cancel game" onClick={handleExit} />
         </div>
 
         <H1 text="Members:" />
@@ -242,11 +236,9 @@ export const LobbyDealer: React.FC = () => {
         <H1 text="Issues:" />
         <Issues
           issues={issues}
-          onDelete={(id: number) => dispatch(deleteIssue(id))}
-          onChange={onChangeIssue}
-          onConfirmUpdate={onConfirmUpdate}
-          onChangePriority={onChangePriority}
-          onConfirmCreate={onConfirmCreate}
+          handleCreateIssue={handleCreateIssue}
+          handleUpdateIssue={handleUpdateIssue}
+          onDelete={handleDeleteIssue}
         />
 
         <H1 text="Game settings:" />
@@ -265,6 +257,8 @@ export const LobbyDealer: React.FC = () => {
           cards={cards}
         />
       </div>
+      <Chat />
+      {isExit && <Redirect to="/" />}
     </>
   );
 };

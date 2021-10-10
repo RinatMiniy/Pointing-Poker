@@ -6,11 +6,11 @@ import {
   GET_SESSION_ERROR,
   LOADING_SESSION,
   LOADED_SESSION,
-  UPDATE_ISSUE,
-  DELETE_ISSUE,
   SESSION_EXIST,
   SESSION_CONNECT_LOADING,
   RESET,
+  CHAT_OPEN,
+  SESSION_RESET,
 } from "./actions";
 import { IStore } from "./types";
 
@@ -44,8 +44,14 @@ const initialState: IStore = {
     time: 0,
     issue: 0,
   },
-  voting: [],
+  voting: {
+    run: false,
+    whoSocket: "",
+    whomSocket: "",
+    votes: [],
+  },
   chat: [],
+  chatOpen: false,
 };
 
 export function reducer(state: IStore = initialState, action: IUnion): IStore {
@@ -77,20 +83,6 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
         error: action.payload.error,
       };
 
-    case UPDATE_ISSUE:
-      return {
-        ...state,
-        issues: state.issues.map((issue) =>
-          issue.id === action.payload.issue.id ? action.payload.issue : issue
-        ),
-      };
-
-    case DELETE_ISSUE:
-      return {
-        ...state,
-        issues: state.issues.filter((issue) => issue.id !== action.payload.id),
-      };
-
     case SESSION_EXIST: {
       return {
         ...state,
@@ -102,6 +94,18 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
       return {
         ...state,
         sessionConnectLoading: action.payload.sessionConnectLoading,
+      };
+
+    case CHAT_OPEN:
+      return {
+        ...state,
+        chatOpen: action.payload.chatOpen,
+      };
+
+    case SESSION_RESET:
+      return {
+        ...state,
+        ...initialState,
       };
 
     default:

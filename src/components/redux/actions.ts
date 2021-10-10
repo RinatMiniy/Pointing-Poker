@@ -1,4 +1,4 @@
-import { IIssueCard, IUserRequest, Settings } from "../../types";
+import { IUser, IUserRequest, Settings } from "../../types";
 import { socket } from "../../api/socket";
 import { Dispatch } from "redux";
 import { IResponse } from "./types";
@@ -10,8 +10,11 @@ export const LOADED_SESSION = "LOADED_SESSION";
 export const UPDATE_ISSUE = "UPDATE_ISSUE";
 export const DELETE_ISSUE = "DELETE_ISSUE";
 export const RESET = "RESET";
+
 export const SESSION_EXIST = "SESSION_EXIST";
 export const SESSION_CONNECT_LOADING = "SESSION_CONNECT_LOADING";
+export const CHAT_OPEN = "CHAT_OPEN";
+export const SESSION_RESET = "SESSION_RESET";
 
 export type IGetSessionError = {
   type: typeof GET_SESSION_ERROR;
@@ -41,20 +44,6 @@ export type ILoadedSession = {
   };
 };
 
-export type IUpdateIssue = {
-  type: typeof UPDATE_ISSUE;
-  payload: {
-    issue: IIssueCard;
-  };
-};
-
-export type IDeleteIssue = {
-  type: typeof DELETE_ISSUE;
-  payload: {
-    id: number;
-  };
-};
-
 export type ISessionConnect = {
   type: typeof SESSION_EXIST;
   payload: {
@@ -73,16 +62,27 @@ export type IReset = {
   type: typeof RESET;
 };
 
+export type IChatOpen = {
+  type: typeof CHAT_OPEN;
+  payload: {
+    chatOpen: boolean;
+  };
+};
+
+export type ISessionReset = {
+  type: typeof SESSION_RESET;
+};
+
 export type IUnion =
   | IGetSession
   | IGetSessionError
   | ILoadingSession
   | ILoadedSession
-  | IUpdateIssue
-  | IDeleteIssue
   | ISessionConnect
   | ISessionConnectLoading
-  | IReset;
+  | IReset
+  | IChatOpen
+  | ISessionReset;
 
 export const getSession = (session: IResponse): IGetSession => ({
   type: GET_SESSION,
@@ -112,20 +112,6 @@ export const loadedSession = (loaded: boolean): ILoadedSession => ({
   },
 });
 
-export const updateIssue = (issue: IIssueCard): IUpdateIssue => ({
-  type: UPDATE_ISSUE,
-  payload: {
-    issue,
-  },
-});
-
-export const deleteIssue = (id: number): IDeleteIssue => ({
-  type: DELETE_ISSUE,
-  payload: {
-    id,
-  },
-});
-
 export const reset = (): IReset => ({
   type: RESET,
 });
@@ -144,6 +130,17 @@ export const sessionConnectLoading = (
   payload: {
     sessionConnectLoading,
   },
+});
+
+export const changeChatOpen = (chatOpen: boolean): IChatOpen => ({
+  type: CHAT_OPEN,
+  payload: {
+    chatOpen,
+  },
+});
+
+export const sessionReset = (): ISessionReset => ({
+  type: SESSION_RESET,
 });
 
 export const requestRegistry = (params: { user: IUserRequest }) => {
@@ -170,7 +167,6 @@ export const requestRegistry = (params: { user: IUserRequest }) => {
       dispatch(loadedSession(true));
 
       socket.subscribeToUpdates<IResponse>((data) => {
-        console.log(data);
         dispatch(getSession(data));
       });
     } catch (e) {
@@ -222,4 +218,8 @@ export const requestLogin = (params: { hash: string; user: IUserRequest }) => {
 
 export const requestUpdate = (setting: Settings, value: unknown) => {
   socket.updateSettings(setting, value);
+};
+
+export const requestMsgToChat = (user: IUser, msg: string) => {
+  socket.addMsgToChat(user, msg);
 };

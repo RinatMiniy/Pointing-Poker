@@ -2,32 +2,37 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
-import { useNotify } from "../../../../hooks/useNotify";
 import { H1 } from "../../../../sharedComponents/h1/H1";
 import { Button } from "../../../../sharedComponents/button/button";
 import { PlayerCard } from "../../../player-card/PlayerCard";
 import { Members } from "../../../../sharedComponents/members/Members";
-import { selectSessionTitle, selectUsers } from "../../../redux/selectors";
-import { socket } from "../../../../api/socket";
+import { Chat } from "../../../Chat/Chat";
+import { VotingPopup } from "../../../../sharedComponents/votingPopup/VotingPopup";
+import {
+  selectSessionTitle,
+  selectUsers,
+  selectChatOpen,
+  selectVoting,
+} from "../../../redux/selectors";
+import { socketIO, socket } from "../../../../api/socket";
 
 import styles from "../lobby-page.module.scss";
+import { IVoitesVotes } from "../../../redux/types";
 
 export const LobbyPlayer: React.FC = () => {
+  const voting = useSelector(selectVoting);
   const users = useSelector(selectUsers);
+  const usersPlayers = users.filter((user) => user.role === "player");
+  const activeUser = users.find((user) => user.socket === socketIO.id);
   const [isDeletedUser, setDeletedUser] = React.useState(false);
   const [isUserExit, setUserExit] = React.useState(false);
 
   const sessionTitle = useSelector(selectSessionTitle);
   const dealer = users.find((user) => user.role === "dealer");
-
-  const notify = useNotify();
+  const chatOpen = useSelector(selectChatOpen);
 
   socket.kickForUserNotification(() => {
-    notify({ type: "error", message: "You were kicked" });
-    setTimeout(() => {
-      debugger;
-      setDeletedUser(true);
-    }, 3000);
+    setDeletedUser(true);
   });
 
   const handleExit = () => {
@@ -37,7 +42,7 @@ export const LobbyPlayer: React.FC = () => {
 
   return (
     <>
-      <div className={styles.lobby}>
+      <div className={chatOpen ? styles.lobby_chat : styles.lobby}>
         <div className={styles.mainTitle}>
           <H1 text={sessionTitle} />
         </div>
@@ -60,11 +65,38 @@ export const LobbyPlayer: React.FC = () => {
         <H1 text="Members:" />
         <Members
           members={users.filter((user) => user.socket !== dealer.socket)}
+          onDelete={
+            activeUser.role === "player" && usersPlayers.length >= 3
+              ? (userSocket: string) =>
+                  socket.votingStart(activeUser.socket, userSocket)
+              : null
+          }
           isMaster={false}
         />
+        {voting.run &&
+          activeUser.role === "player" &&
+          activeUser.socket !== voting.whoSocket &&
+          activeUser.socket !== voting.whomSocket &&
+          !voting.votes.find(
+            (vote: IVoitesVotes) => vote.userSocket === activeUser.socket
+          ) && (
+            <VotingPopup
+              whoSocket={voting.whoSocket}
+              whomSocket={voting.whomSocket}
+            />
+          )}
 
-        {(isDeletedUser || isUserExit) && <Redirect to="/" />}
+        {isUserExit && <Redirect to="/" />}
+        {isDeletedUser && (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: { kick: true },
+            }}
+          />
+        )}
       </div>
+      <Chat />
     </>
   );
 };

@@ -9,7 +9,7 @@ export const RouterApp: React.FC = () => {
       <Route exact path="/">
         <MainPage />
       </Route>
-      <Route exact path="/:hash">
+      <Route exact path="/:id">
         <LobbyPage />
       </Route>
     </Switch>

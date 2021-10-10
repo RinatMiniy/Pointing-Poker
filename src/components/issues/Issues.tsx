@@ -1,75 +1,82 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { Grid } from "../../sharedComponents/grid/Grid";
 import { IssueCard } from "../../sharedComponents/issue-card/issue-card/IssueCard";
 import { CreateIssue } from "../../sharedComponents/issue-card/create-issue/CreateIssue";
-import { IIssueCard, Priority } from "../../types";
-import { NewIssueCard } from "../../sharedComponents/issue-card/new-issue-card/NewIssueCard";
+import { IIssueCard } from "../../types";
 import { useSelector } from "react-redux";
 import { selectUsers } from "../redux/selectors";
 import { socketIO } from "../../api/socket";
+import { NewIssuePopup } from "../../sharedComponents/issue-card/new-issue-popup/NewIssuePopup";
 
 type IIssuesProps = {
   issues: IIssueCard[];
+  handleCreateIssue: (issue: IIssueCard) => void;
+  handleUpdateIssue: (id: number, issue: IIssueCard) => void;
   onDelete: (id: number) => void;
-  onChange: (id: number, title: string, priority: Priority) => void;
-  onConfirmUpdate: (title: string) => void;
-  onChangePriority: (id: number, title: string, priority: Priority) => void;
-  onConfirmCreate: (title: string, pririty: Priority) => void;
 };
 
 export const Issues: React.FC<IIssuesProps> = (props) => {
   const [isCreateIssue, setIsCreateIssue] = React.useState(false);
-  const [newIssueTitle, setNewIssueTitle] = React.useState("");
-  const [newIssuePriority, setNewIssuePriority] = React.useState(Priority.low);
+  const [isUpdateIssue, setIsUpdateIssue] = React.useState(false);
+  const [updatedCard, setUpdatedCard] = React.useState<IIssueCard | null>(null);
+  const [idUpatedIssue, setIdUpdatedIssue] = React.useState<null | number>(
+    null
+  );
 
   const users = useSelector(selectUsers);
   const dealer = users.find((user) => user.role === "dealer");
   const isDelear = dealer.socket === socketIO.id;
 
-  const onCreateIssueTitle = (e: ChangeEvent) => {
-    const target = e.target as HTMLInputElement;
-    setNewIssueTitle(target.value);
+  const handleCreateIssue = (issue: IIssueCard) => {
+    props.handleCreateIssue(issue);
+    setIsCreateIssue(false);
   };
 
-  const onConfirmCreate = () => {
-    props.onConfirmCreate(newIssueTitle, newIssuePriority);
-    if (newIssueTitle) {
-      setIsCreateIssue(false);
-    }
+  const handleUpdateIssue = (issue: IIssueCard) => {
+    props.handleUpdateIssue(idUpatedIssue, issue);
+    setIsUpdateIssue(false);
   };
 
-  const onSetPriority = (e: ChangeEvent) => {
-    const target = e.target as HTMLSelectElement;
-    setNewIssuePriority(target.value as Priority);
+  const onUpdate = (id: number, issue: IIssueCard) => {
+    setIsUpdateIssue(true);
+    setUpdatedCard(issue);
+    setIdUpdatedIssue(id);
   };
 
   return (
     <Grid>
-      {props.issues.map((issue) => (
+      {props.issues.map((issue, idx) => (
         <IssueCard
-          key={issue.id}
-          id={issue.id}
+          id={idx}
+          key={issue.title}
+          link={issue.link}
           title={issue.title}
           priority={issue.priority}
-          onChange={props.onChange}
-          onConfirmUpdate={props.onConfirmUpdate}
           onDelete={props.onDelete}
-          onChangePriority={props.onChangePriority}
+          cards={issue.cards}
+          onUpdate={onUpdate}
         />
       ))}
       {isDelear &&
         (isCreateIssue ? (
-          <NewIssueCard
-            type="create"
-            priority={newIssuePriority}
-            onChange={onCreateIssueTitle}
+          <NewIssuePopup
+            handleCreateIssue={handleCreateIssue}
             onCancel={() => setIsCreateIssue(false)}
-            onChangePriority={onSetPriority}
-            onConfirmCreate={onConfirmCreate}
+            type="create"
           />
         ) : (
           <CreateIssue onClick={() => setIsCreateIssue(true)} />
         ))}
+      {isUpdateIssue && (
+        <NewIssuePopup
+          handleUpdateIssue={handleUpdateIssue}
+          onCancel={() => setIsUpdateIssue(false)}
+          type="update"
+          title={updatedCard.title}
+          priority={updatedCard.priority}
+          link={updatedCard.link}
+        />
+      )}
     </Grid>
   );
 };

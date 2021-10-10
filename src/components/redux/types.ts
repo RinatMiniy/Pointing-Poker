@@ -11,7 +11,7 @@ export type IResponse = {
   autoLogin: boolean;
   flipCards: boolean;
   game: IGame;
-  voting: IVoting[];
+  voting: IVoting;
   chat: IMsgToChat[];
 };
 
@@ -26,7 +26,9 @@ export type IGame = {
 
 export type IVoting = {
   run: boolean;
-  votes: IVoitesVotes;
+  whoSocket: string;
+  whomSocket: string;
+  votes: IVoitesVotes[];
 };
 
 export type IVoitesVotes = {
@@ -52,6 +54,7 @@ export type IStore = {
   sessionExist: boolean;
   sessionConnectLoading: boolean;
   game: IGame;
-  voting: IVoting[];
+  voting: IVoting;
   chat: IMsgToChat[];
+  chatOpen: boolean;
 };

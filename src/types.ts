@@ -39,7 +39,7 @@ export type ILoginRequest = {
 
 export enum Priority {
   low = "low",
-  medium = "medium",
+  middle = "middle",
   high = "high",
 }
 
@@ -57,11 +57,16 @@ export enum Settings {
   game = "game",
 }
 
+export type IIssueCards = {
+  userSocket: string;
+  cardValue: string;
+};
+
 export type IIssueCard = {
-  id: number;
   title: string;
+  link: string;
   priority: Priority;
-  cards?: { userSocket: string; cardValue: string }[];
+  cards: IIssueCards[];
 };
 
 export enum SetCards {

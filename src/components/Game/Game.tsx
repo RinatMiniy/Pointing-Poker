@@ -4,33 +4,30 @@ import styles from "./game.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { PlayerCard } from "../player-card/PlayerCard";
 import { Issues } from "../issues/Issues";
-import { useNotify } from "../../hooks/useNotify";
-import { Priority, Settings } from "../../types";
+import { IIssueCard, Settings } from "../../types";
 import {
-  selectAll,
   selectIssues,
   selectSessionTitle,
+  selectState,
   selectUsers,
 } from "../redux/selectors";
-import {
-  deleteIssue,
-  requestUpdate,
-  reset,
-  updateIssue,
-} from "../redux/actions";
+import { requestUpdate, reset } from "../redux/actions";
 import { socketIO, socket } from "../../api/socket";
 import { Button } from "../../sharedComponents/button/button";
 import { Members } from "../../sharedComponents/members/Members";
 import { GameCard } from "../../sharedComponents/game-card/GameCard";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { GameResult } from "../GameResult/GameResult";
 
 let statistic = [];
 
 export const Game = () => {
+  interface IRouteParams {
+    id: string;
+  }
   const dispatch = useDispatch();
 
-  const state = useSelector(selectAll);
+  const state = useSelector(selectState);
 
   const users = useSelector(selectUsers);
   const issues = useSelector(selectIssues);
@@ -40,55 +37,24 @@ export const Game = () => {
 
   const valueCardsInIssue = [];
 
-  const notify = useNotify();
+  const { id } = useParams<IRouteParams>();
 
-  const onChangeIssue = (id: number, title: string, priority: Priority) => {
-    dispatch(updateIssue({ id, title, priority }));
+  const handleCreateIssue = (issue: IIssueCard) => {
+    requestUpdate(Settings.issues, issues.concat(issue));
   };
 
-  const onConfirmUpdate = (title: string) => {
-    if (title) {
-      notify({ type: "success", message: "Success" });
-    } else {
-      notify({ type: "error", message: "Name should be set!" });
-    }
+  const handleDeleteIssue = (id: number) => {
+    const cloneIssues = [...issues];
+    cloneIssues.splice(id, 1);
+    requestUpdate(Settings.issues, cloneIssues);
   };
 
-  const onChangePriority = (id: number, title: string, priority: Priority) => {
-    dispatch(updateIssue({ id, title, priority }));
+  const handleUpdateIssue = (id: number, newIssue: IIssueCard) => {
+    requestUpdate(
+      Settings.issues,
+      issues.map((issue, idx) => (idx === id ? newIssue : issue))
+    );
   };
-
-  const onConfirmCreate = (title: string, priority: Priority) => {
-    const id = new Date().getTime();
-    if (title) {
-      requestUpdate(Settings.issues, issues.concat({ id, title, priority }));
-      notify({ type: "success", message: "Success" });
-    } else {
-      notify({ type: "error", message: "Name should be set!" });
-    }
-  };
-
-  // function getStats(cards) {
-  //   const result = {};
-
-  //   cards.forEach((card: { userSocket: string; cardValue: string }) => {
-  //     if (result[card.cardValue]) {
-  //       result[card.cardValue]++;
-  //     } else {
-  //       result[card.cardValue] = 1;
-  //     }
-  //   });
-
-  //   return result;
-  // }
-
-  // function getVote(cards: any, id: string) {
-  //   const card = cards.find(
-  //     (card: { userSocket: string; cardValue: string }) => card.userSocket === id,
-  //   );
-  //   return card ? card.cardValue : null;
-  // }
-
   {
     if (state.game.endRound) {
       state.users.map((user) => {
@@ -114,16 +80,6 @@ export const Game = () => {
               valueCardsInIssue.push("Unknown");
             }
           }
-          //   state.issues[state.game.issue].cards.map((value:{userSocket:string, cardValue:string}, index) => {
-          //   if (user.socket === value.userSocket) {
-          //     valueCardsInIssue.push(value.cardValue)
-          //     index++
-          //   } else if (index === state.issues[state.game.issue].cards.length - 1) {
-          //     console.log("index", index, "state.issues[state.game.issue].cards.length - 1", state.issues[state.game.issue].cards.length - 1)
-          //     valueCardsInIssue.push("unknown")
-          //   }
-
-          // })
         } else {
           valueCardsInIssue.push("Unknown");
         }
@@ -164,7 +120,12 @@ export const Game = () => {
                 <div className={styles.btnBlockTop}>
                   <p className={styles.timer}>time: {state.game.time}</p>
                   {isDelear ? (
-                    <Link to={"/"}>
+                    <Link
+                      to={{
+                        pathname: "/",
+                        state: { hash: id },
+                      }}
+                    >
                       <Button
                         onClick={() => {
                           socket.exit;
@@ -212,11 +173,9 @@ export const Game = () => {
                 <H1 text="Issues:" />
                 <Issues
                   issues={issues}
-                  onDelete={(id: number) => dispatch(deleteIssue(id))}
-                  onChange={onChangeIssue}
-                  onConfirmUpdate={onConfirmUpdate}
-                  onChangePriority={onChangePriority}
-                  onConfirmCreate={onConfirmCreate}
+                  handleCreateIssue={handleCreateIssue}
+                  handleUpdateIssue={handleUpdateIssue}
+                  onDelete={handleDeleteIssue}
                 />
               </div>
 

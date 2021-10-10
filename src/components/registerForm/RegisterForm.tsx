@@ -56,12 +56,21 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
         requestRegistry({ user: { ...data, avatar: userImg, role: "delear" } })
       );
     } else {
-      dispatch(
-        requestLogin({
-          hash: props.hash,
-          user: { ...data, avatar: userImg, role: "player" },
-        })
-      );
+      if (data.observer) {
+        dispatch(
+          requestLogin({
+            hash: props.hash,
+            user: { ...data, role: "spectator" },
+          })
+        );
+      } else {
+        dispatch(
+          requestLogin({
+            hash: props.hash,
+            user: { ...data, avatar: userImg, role: "player" },
+          })
+        );
+      }
     }
 
     error
@@ -116,10 +125,13 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
             className={styles.fileInput}
             onChange={handleUserImg}
           />
-          <div className={styles.observerWrapper}>
-            <div className={styles.label}>Connect as Observer</div>
-            <Switcher {...register("observer")} />
-          </div>
+          {!props.isMaster && (
+            <div className={styles.observerWrapper}>
+              <div className={styles.label}>Connect as Observer</div>
+              <Switcher {...register("observer")} />
+            </div>
+          )}
+
           <div className={styles.confirmButton}>
             <Button text="Confirm" isPrimary={true} />
             {loaded && (

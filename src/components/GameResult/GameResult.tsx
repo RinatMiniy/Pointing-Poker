@@ -12,6 +12,7 @@ export const GameResult = () => {
     <div className={styles.gameResult}>
       {issues.map((issue, index) => (
         <div className={styles.roundStat} key={index}>
+          {console.log("issue", issue)}
           <CardContainer>
             <div className={styles.issue}>
               <div>
@@ -21,6 +22,9 @@ export const GameResult = () => {
               </div>
             </div>
             <div className={styles.statisticBlock}>
+              {issue.cards.map((cards) => {
+                cards.cardValue;
+              })}
               {/* {state.game.endRound && 
               <div>{Object.keys(statistic[0]).map((key) => (
                 <li key={key}>
