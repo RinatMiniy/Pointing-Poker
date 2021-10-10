@@ -25,3 +25,5 @@ export const selectSessionExist = (state: IStore) => state.sessionExist;
 export const selectChatOpen = (state: IStore) => state.chatOpen;
 
 export const selectChat = (state: IStore) => state.chat;
+
+export const selectVoting = (state: IStore) => state.voting;

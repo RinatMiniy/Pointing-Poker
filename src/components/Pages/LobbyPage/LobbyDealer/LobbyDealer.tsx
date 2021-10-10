@@ -24,6 +24,7 @@ import { requestUpdate } from "../../../redux/actions";
 import { socket } from "../../../../api/socket";
 
 import styles from "../lobby-page.module.scss";
+import { Redirect } from "react-router-dom";
 
 export const LobbyDealer: React.FC = () => {
   const users = useSelector(selectUsers);
@@ -39,11 +40,16 @@ export const LobbyDealer: React.FC = () => {
   );
 
   const dealer = users.find((user) => user.role === "dealer");
-
   const [inputVisible, setInputVisible] = React.useState(false);
+  const [isExit, setExit] = React.useState(false);
 
   const notify = useNotify();
   const chatOpen = useSelector(selectChatOpen);
+
+  const handleExit = () => {
+    socket.exit();
+    setExit(true);
+  };
 
   const handleSessionName = (e: ChangeEvent) => {
     const target = e.target as HTMLInputElement;
@@ -217,7 +223,7 @@ export const LobbyDealer: React.FC = () => {
             isPrimary={true}
             onClick={handleStartGame}
           />
-          <Button text="cancel game" />
+          <Button text="cancel game" onClick={handleExit} />
         </div>
 
         <H1 text="Members:" />
@@ -252,6 +258,7 @@ export const LobbyDealer: React.FC = () => {
         />
       </div>
       <Chat />
+      {isExit && <Redirect to="/" />}
     </>
   );
 };

@@ -7,23 +7,28 @@ import { Button } from "../../../../sharedComponents/button/button";
 import { PlayerCard } from "../../../player-card/PlayerCard";
 import { Members } from "../../../../sharedComponents/members/Members";
 import { Chat } from "../../../Chat/Chat";
+import { VotingPopup } from "../../../../sharedComponents/votingPopup/VotingPopup";
 import {
   selectSessionTitle,
   selectUsers,
   selectChatOpen,
+  selectVoting,
 } from "../../../redux/selectors";
-import { socket } from "../../../../api/socket";
+import { socketIO, socket } from "../../../../api/socket";
 
 import styles from "../lobby-page.module.scss";
+import { IVoitesVotes } from "../../../redux/types";
 
 export const LobbyPlayer: React.FC = () => {
+  const voting = useSelector(selectVoting);
   const users = useSelector(selectUsers);
+  const usersPlayers = users.filter((user) => user.role === "player");
+  const activeUser = users.find((user) => user.socket === socketIO.id);
   const [isDeletedUser, setDeletedUser] = React.useState(false);
   const [isUserExit, setUserExit] = React.useState(false);
 
   const sessionTitle = useSelector(selectSessionTitle);
   const dealer = users.find((user) => user.role === "dealer");
-
   const chatOpen = useSelector(selectChatOpen);
 
   socket.kickForUserNotification(() => {
@@ -60,8 +65,26 @@ export const LobbyPlayer: React.FC = () => {
         <H1 text="Members:" />
         <Members
           members={users.filter((user) => user.socket !== dealer.socket)}
+          onDelete={
+            activeUser.role === "player" && usersPlayers.length >= 3
+              ? (userSocket: string) =>
+                  socket.votingStart(activeUser.socket, userSocket)
+              : null
+          }
           isMaster={false}
         />
+        {voting.run &&
+          activeUser.role === "player" &&
+          activeUser.socket !== voting.whoSocket &&
+          activeUser.socket !== voting.whomSocket &&
+          !voting.votes.find(
+            (vote: IVoitesVotes) => vote.userSocket === activeUser.socket
+          ) && (
+            <VotingPopup
+              whoSocket={voting.whoSocket}
+              whomSocket={voting.whomSocket}
+            />
+          )}
 
         {isUserExit && <Redirect to="/" />}
         {isDeletedUser && (

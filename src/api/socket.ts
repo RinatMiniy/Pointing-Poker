@@ -84,6 +84,14 @@ function addMsgToChat(user: IUser, msg: string) {
   socketIO.emit("addMsgToChat", user, msg);
 }
 
+function votingStart(whoSocket: string, whomSocket: string) {
+  socketIO.emit("votingStart", whoSocket, whomSocket);
+}
+
+function vote(type: string) {
+  socketIO.emit("vote", type);
+}
+
 export const socket = {
   send,
   check,
@@ -95,4 +103,6 @@ export const socket = {
   updateSettings,
   runGame,
   addMsgToChat,
+  votingStart,
+  vote,
 };

@@ -4,11 +4,12 @@ import { InputText } from "../../../sharedComponents/inputText/InputText";
 import { RegisterForm } from "../../registerForm/RegisterForm";
 import styles from "./mainPage.module.scss";
 import cn from "classnames";
-import { useDispatch } from "react-redux";
-import { requestSession } from "../../redux/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { requestSession, sessionReset } from "../../redux/actions";
 import { useNotify } from "../../../hooks/useNotify";
 import { ToastContainer } from "react-toastify";
 import { useLocation, useHistory } from "react-router-dom";
+import { selectSessionHash } from "../../redux/selectors";
 
 interface ILocation {
   state: {
@@ -21,6 +22,7 @@ export const MainPage: React.FC = () => {
   const history = useHistory();
   const location: ILocation = useLocation();
 
+  const hash = useSelector(selectSessionHash);
   const [openRegistration, setOpenRegistration] = React.useState(false);
   const [isMaster, setIsMaster] = React.useState(false);
   const [link, setLink] = React.useState(
@@ -61,17 +63,18 @@ export const MainPage: React.FC = () => {
   React.useEffect(() => {
     if (location.state) {
       if (location.state.hash) {
-        history.replace({
-          state: null,
-        });
         onConnect();
       }
       if (location.state.kick) {
-        history.replace({
-          state: null,
-        });
         notify({ type: "error", message: "You were kicked" });
       }
+      history.replace({
+        state: null,
+      });
+    }
+
+    if (hash) {
+      dispatch(sessionReset());
     }
   }, []);
 

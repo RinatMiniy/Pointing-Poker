@@ -9,6 +9,7 @@ import {
   SESSION_EXIST,
   SESSION_CONNECT_LOADING,
   CHAT_OPEN,
+  SESSION_RESET,
 } from "./actions";
 import { IStore } from "./types";
 
@@ -42,7 +43,12 @@ const initialState: IStore = {
     time: 0,
     issue: 0,
   },
-  voting: [],
+  voting: {
+    run: false,
+    whoSocket: "",
+    whomSocket: "",
+    votes: [],
+  },
   chat: [],
   chatOpen: false,
 };
@@ -90,6 +96,12 @@ export function reducer(state: IStore = initialState, action: IUnion): IStore {
       return {
         ...state,
         chatOpen: action.payload.chatOpen,
+      };
+
+    case SESSION_RESET:
+      return {
+        ...state,
+        ...initialState,
       };
 
     default:
