@@ -1,13 +1,13 @@
 import io from "socket.io-client";
 import { IUser, IUserRequest, Settings } from "../types";
 
-// export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
-//   transports: ["websocket", "polling"],
-// });
-
-export const socketIO = io("http://localhost:3000", {
+export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
   transports: ["websocket", "polling"],
 });
+
+// export const socketIO = io("http://localhost:3000", {
+//   transports: ["websocket", "polling"],
+// });
 
 interface ISendCreate {
   type: "create";
