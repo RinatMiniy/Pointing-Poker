@@ -76,7 +76,7 @@ export const MainPage: React.FC = () => {
     if (hash) {
       dispatch(sessionReset());
     }
-  });
+  }, []);
 
   return (
     <div className={styles.mainPage}>
