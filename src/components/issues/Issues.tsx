@@ -3,6 +3,9 @@ import { Grid } from "../../sharedComponents/grid/Grid";
 import { IssueCard } from "../../sharedComponents/issue-card/issue-card/IssueCard";
 import { CreateIssue } from "../../sharedComponents/issue-card/create-issue/CreateIssue";
 import { IIssueCard } from "../../types";
+import { useSelector } from "react-redux";
+import { selectUsers } from "../redux/selectors";
+import { socketIO } from "../../api/socket";
 import { NewIssuePopup } from "../../sharedComponents/issue-card/new-issue-popup/NewIssuePopup";
 
 type IIssuesProps = {
@@ -19,6 +22,10 @@ export const Issues: React.FC<IIssuesProps> = (props) => {
   const [idUpatedIssue, setIdUpdatedIssue] = React.useState<null | number>(
     null
   );
+
+  const users = useSelector(selectUsers);
+  const dealer = users.find((user) => user.role === "dealer");
+  const isDelear = dealer.socket === socketIO.id;
 
   const handleCreateIssue = (issue: IIssueCard) => {
     props.handleCreateIssue(issue);
@@ -50,15 +57,16 @@ export const Issues: React.FC<IIssuesProps> = (props) => {
           onUpdate={onUpdate}
         />
       ))}
-      {isCreateIssue ? (
-        <NewIssuePopup
-          handleCreateIssue={handleCreateIssue}
-          onCancel={() => setIsCreateIssue(false)}
-          type="create"
-        />
-      ) : (
-        <CreateIssue onClick={() => setIsCreateIssue(true)} />
-      )}
+      {isDelear &&
+        (isCreateIssue ? (
+          <NewIssuePopup
+            handleCreateIssue={handleCreateIssue}
+            onCancel={() => setIsCreateIssue(false)}
+            type="create"
+          />
+        ) : (
+          <CreateIssue onClick={() => setIsCreateIssue(true)} />
+        ))}
       {isUpdateIssue && (
         <NewIssuePopup
           handleUpdateIssue={handleUpdateIssue}

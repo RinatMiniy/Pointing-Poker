@@ -6,7 +6,7 @@ import styles from "./user-avatar.module.scss";
 type IUserAvatar = {
   firstName: string;
   lastName: string;
-  img?: string;
+  avatar?: string;
   isMiddleSize: boolean;
 };
 
@@ -17,8 +17,8 @@ export const UserAvatar: React.FC<IUserAvatar> = (props) => {
         [styles["userAvatarContainer--middleSize"]]: props.isMiddleSize,
       })}
     >
-      {props.img ? (
-        <img src={props.img} alt="avatar" />
+      {props.avatar ? (
+        <img src={props.avatar} alt="avatar" />
       ) : (
         <div className={styles.innerText}>
           {props.firstName[0]}

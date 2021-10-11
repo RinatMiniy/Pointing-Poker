@@ -80,6 +80,10 @@ function runGame() {
   socketIO.emit("runGame");
 }
 
+function runRound() {
+  socketIO.emit("runRound");
+}
+
 function addMsgToChat(user: IUser, msg: string) {
   socketIO.emit("addMsgToChat", user, msg);
 }
@@ -102,6 +106,7 @@ export const socket = {
   exit,
   updateSettings,
   runGame,
+  runRound,
   addMsgToChat,
   votingStart,
   vote,

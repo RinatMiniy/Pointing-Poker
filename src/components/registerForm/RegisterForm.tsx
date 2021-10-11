@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,6 +15,7 @@ import {
 } from "../redux/selectors";
 
 import styles from "./registerForm.module.scss";
+import { UserAvatar } from "../../sharedComponents/user-avatar/UserAvatar";
 
 type FormItem = {
   firstName: string;
@@ -38,6 +39,8 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
     reset,
   } = useForm<FormItem>();
 
+  const [userImg, setUserImg] = useState("");
+
   const loaded = useSelector(selectLoaded);
   const hash = useSelector(selectSessionHash);
 
@@ -49,7 +52,9 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
 
   const onSubmit = (data: FormItem) => {
     if (props.isMaster) {
-      dispatch(requestRegistry({ user: { ...data, role: "delear" } }));
+      dispatch(
+        requestRegistry({ user: { ...data, avatar: userImg, role: "delear" } })
+      );
     } else {
       if (data.observer) {
         dispatch(
@@ -60,7 +65,10 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
         );
       } else {
         dispatch(
-          requestLogin({ hash: props.hash, user: { ...data, role: "player" } })
+          requestLogin({
+            hash: props.hash,
+            user: { ...data, avatar: userImg, role: "player" },
+          })
         );
       }
     }
@@ -77,6 +85,15 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
       validate: (value) => !!value.length || "Name shoud be set!",
     });
   }, [register]);
+
+  const handleUserImg = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = function () {
+      setUserImg(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
     <>
@@ -102,13 +119,19 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
           <label htmlFor="fileInput" className={styles.fileInputLabel}>
             Choose file
           </label>
-          <input type="file" id="fileInput" className={styles.fileInput} />
+          <input
+            type="file"
+            id="fileInput"
+            className={styles.fileInput}
+            onChange={handleUserImg}
+          />
           {!props.isMaster && (
             <div className={styles.observerWrapper}>
               <div className={styles.label}>Connect as Observer</div>
               <Switcher {...register("observer")} />
             </div>
           )}
+
           <div className={styles.confirmButton}>
             <Button text="Confirm" isPrimary={true} />
             {loaded && (
@@ -116,6 +139,12 @@ export const RegisterForm: React.FC<IRegistrationFormProps> = (props) => {
             )}
           </div>
         </form>
+        <UserAvatar
+          firstName="A"
+          lastName="A"
+          avatar={userImg}
+          isMiddleSize={false}
+        />
         <div className={styles.cancelButton}>
           <Button text="Cancel" onClick={props.onCancel} />
         </div>

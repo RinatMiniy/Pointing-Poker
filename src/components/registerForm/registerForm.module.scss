@@ -8,6 +8,10 @@
   top: 50%;
   transform: translate(-50%, -30%);
   padding: 75px 35px;
+
+  & button {
+    margin: 0 15px 15px 15px;
+  }
 }
 
 .formRegister {
@@ -37,6 +41,7 @@
   bottom: 0;
   background: #000000;
   opacity: 0.7;
+  min-height: 1102px;
 }
 
 .label {

@@ -76,6 +76,7 @@ export const MainPage: React.FC = () => {
     if (hash) {
       dispatch(sessionReset());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -1,10 +1,12 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
-import { selectUsers } from "../../redux/selectors";
+import { selectState, selectUsers } from "../../redux/selectors";
 import { socketIO } from "../../../api/socket";
 import { LobbyDealer } from "./LobbyDealer/LobbyDealer";
 import { LobbyPlayer } from "./LobbyPlayer/LobbyPlayer";
+import { Game } from "../../Game/Game";
+import { GameResult } from "../../GameResult/GameResult";
 import { Redirect, useParams } from "react-router-dom";
 
 interface IRouteParams {
@@ -14,6 +16,7 @@ interface IRouteParams {
 export const LobbyPage: React.FC = () => {
   const { id } = useParams<IRouteParams>();
   const users = useSelector(selectUsers);
+  const state = useSelector(selectState);
 
   if (id && !users.length) {
     return (
@@ -31,7 +34,19 @@ export const LobbyPage: React.FC = () => {
 
   return (
     <>
-      {isDelear ? <LobbyDealer /> : <LobbyPlayer />}{" "}
+      {!state.game.endGame ? (
+        !state.game.runGame ? (
+          isDelear ? (
+            <LobbyDealer />
+          ) : (
+            <LobbyPlayer />
+          )
+        ) : (
+          <Game />
+        )
+      ) : (
+        <GameResult />
+      )}
       <ToastContainer
         position="top-right"
         autoClose={5000}

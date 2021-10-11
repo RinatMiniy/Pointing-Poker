@@ -16,7 +16,7 @@ export type IUserComplete = {
   socket: string;
   isActive: boolean;
   job?: string;
-  img?: string;
+  avatar?: string;
 };
 
 export type IUserRequest = {
@@ -32,7 +32,7 @@ export type ILoginRequest = {
   firstName: string;
   lastName: string;
   observer: boolean;
-  img?: string;
+  avatar?: string;
   job?: string;
   hash: string;
 };
@@ -43,6 +43,10 @@ export enum Priority {
   high = "high",
 }
 
+export type ICards = {
+  userSocket: string;
+  cardValue: string;
+};
 export enum Settings {
   title = "title",
   hash = "hash",
@@ -81,4 +85,13 @@ export type IGameSettings = {
   autoLogin: boolean;
   flipCards: boolean;
   setCards: SetCards;
+};
+
+export type IGame = {
+  runGame: boolean;
+  endGame: boolean;
+  runRound: boolean;
+  endRound: boolean;
+  time: number;
+  issue: number;
 };
