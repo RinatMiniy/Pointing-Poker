@@ -26,6 +26,7 @@
 
 .memberList {
   border-left: 1px solid rgba(0, 0, 0, 0.5);
+  padding-top: 20px;
 }
 
 .btnBlockTop {
@@ -82,4 +83,16 @@
 .percent {
   text-align: center;
   margin-top: 10px;
+}
+
+.scoreTable {
+  display: flex;
+  align-items: center;
+  height: 69px;
+  box-shadow: 1px 3px 8px 0px rgb(34 60 80 / 20%);
+  padding: 10px;
+  font-family: Roboto, sans-serif;
+  margin-left: 20px;
+  margin-right: 10px;
+  margin-bottom: 16px;
 }

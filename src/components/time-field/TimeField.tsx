@@ -9,6 +9,7 @@ type ITimerFieldProps = {
   sec: number;
   isLobby: boolean;
   onSetTimer?: (time: { min: number; sec: number }) => void;
+  disabled?: boolean;
 };
 
 export const TimeField: React.FC<ITimerFieldProps> = (props) => {
@@ -32,6 +33,7 @@ export const TimeField: React.FC<ITimerFieldProps> = (props) => {
           min="0"
           max="59"
           value={props.isLobby ? min : Math.floor(time / 60)}
+          disabled={props.disabled}
           onChange={(e) => {
             let value = Number(e.target.value);
             if (value > 59) value = 59;
@@ -44,6 +46,7 @@ export const TimeField: React.FC<ITimerFieldProps> = (props) => {
         <div>seconds</div>
         <input
           type="number"
+          disabled={props.disabled}
           min="0"
           max="59"
           value={props.isLobby ? sec : String(time % 60).padStart(2, "0")}

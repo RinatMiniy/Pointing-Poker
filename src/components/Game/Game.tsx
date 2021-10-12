@@ -160,6 +160,7 @@ export const Game = () => {
                       sec={+state.settings.roundTime % 60}
                       onSetTimer={null}
                       isLobby={false}
+                      disabled={true}
                     />
 
                     {isDelear ? (
@@ -263,18 +264,20 @@ export const Game = () => {
 
           <div className={styles.memberList}>
             <div className={styles.columnScore}>
+              <H1 text="Score" />
               {users.map((value, index) => {
                 return (
                   <div className={styles.scoreTable} key={index}>
                     {state.game.endRound
                       ? valueCardsInIssue[index]
-                      : "in progress"}
+                      : "In progress"}
                   </div>
                 );
               })}
             </div>
 
             <div className={styles.columnMembers}>
+              <H1 text="Players" />
               <Members members={users} isMaster={false} />
             </div>
           </div>
