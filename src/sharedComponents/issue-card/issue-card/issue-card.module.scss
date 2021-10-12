@@ -1,6 +1,7 @@
 .issue {
   display: flex;
   width: 100%;
+  align-items: center;
 
   svg {
     width: 25px;
@@ -24,6 +25,7 @@
 }
 
 .title {
+  margin-top: 5px;
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 200px;
@@ -34,4 +36,8 @@
   font-size: 10px;
   color: rgb(116, 116, 116);
   margin-top: 5px;
+}
+
+.current {
+  font-size: 10px;
 }

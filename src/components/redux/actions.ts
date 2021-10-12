@@ -144,7 +144,6 @@ export const sessionReset = (): ISessionReset => ({
 });
 
 export const requestRegistry = (params: { user: IUserRequest }) => {
-  console.log(params.user.avatar);
   return async (dispatch: Dispatch) => {
     dispatch(getSessionError(null));
     dispatch(loadingSession(true));

@@ -13,6 +13,7 @@ type IIssuesProps = {
   handleCreateIssue: (issue: IIssueCard) => void;
   handleUpdateIssue: (id: number, issue: IIssueCard) => void;
   onDelete: (id: number) => void;
+  activeIssue?: number;
 };
 
 export const Issues: React.FC<IIssuesProps> = (props) => {
@@ -55,6 +56,7 @@ export const Issues: React.FC<IIssuesProps> = (props) => {
           onDelete={props.onDelete}
           cards={issue.cards}
           onUpdate={onUpdate}
+          isActive={idx === props.activeIssue}
         />
       ))}
       {isDelear &&

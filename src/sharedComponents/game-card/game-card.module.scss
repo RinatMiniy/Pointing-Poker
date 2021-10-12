@@ -43,3 +43,23 @@
 .lowTitle {
   transform: rotate(180deg);
 }
+
+.presentation {
+  display: flex;
+  flex-direction: column;
+  width: 100px;
+  height: 162px;
+  box-shadow: 1px 1px 6px 0px rgb(34 60 80 / 20%);
+  padding: 10px;
+  justify-content: space-between;
+  font-family: "Ruda";
+  cursor: pointer;
+}
+
+.isActive {
+  background: rgba(96, 218, 191, 0.46);
+}
+
+.disabled {
+  pointer-events: none;
+}
