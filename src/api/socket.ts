@@ -1,13 +1,13 @@
 import io from "socket.io-client";
 import { IUser, IUserRequest, Settings } from "../types";
 
-// export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
-//   transports: ["websocket", "polling"],
-// });
-
-export const socketIO = io("http://localhost:3000", {
+export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
   transports: ["websocket", "polling"],
 });
+
+// export const socketIO = io("http://localhost:3000", {
+//   transports: ["websocket", "polling"],
+// });
 
 interface ISendCreate {
   type: "create";
@@ -92,8 +92,16 @@ function runGame() {
   socketIO.emit("runGame");
 }
 
+function endGame() {
+  socketIO.emit("endGame");
+}
+
 function runRound() {
   socketIO.emit("runRound");
+}
+
+function endRound() {
+  socketIO.emit("endRound");
 }
 
 function addMsgToChat(user: IUser, msg: string) {
@@ -121,7 +129,9 @@ export const socket = {
   exit,
   updateSettings,
   runGame,
+  endGame,
   runRound,
+  endRound,
   addMsgToChat,
   votingStart,
   vote,
