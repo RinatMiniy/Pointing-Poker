@@ -38,6 +38,11 @@ export const Game = () => {
   const dealer = users.find((user) => user.role === "dealer");
   const isDelear = dealer.socket === socketIO.id;
 
+  const dealerNotActive = isDelear && !state.settings.masterPlayer;
+
+  const activeUser = users.find((user) => user.socket === socketIO.id);
+  const isSpectator = activeUser.role === "spectator";
+
   const valueCardsInIssue = [];
 
   const { id } = useParams<IRouteParams>();
@@ -82,7 +87,14 @@ export const Game = () => {
               );
               break;
             } else if (i === state.issues[state.game.issue].cards.length - 1) {
-              valueCardsInIssue.push("Unknown");
+              if (
+                !(
+                  user.socket === dealer.socket && !state.settings.masterPlayer
+                ) &&
+                !(user.role === "spectator")
+              ) {
+                valueCardsInIssue.push("Unknown");
+              }
             }
           }
         } else {
@@ -237,29 +249,31 @@ export const Game = () => {
               )}
             </div>
 
-            <div className={styles.cards}>
-              {state.cards.map((card, idx) => (
-                <GameCard
-                  key={card}
-                  id={idx}
-                  value={card}
-                  sessionShortTitle={state.settings.scoreTypeShort}
-                  cards={state.cards}
-                  onClick={() => {
-                    socketIO.emit("cardSelection", card);
-                    setActiveCard(idx);
-                  }}
-                  isRunGame={true}
-                  isActiveCard={
-                    idx === activeCard &&
-                    (state.game.runRound || state.settings.changingCard)
-                  }
-                  disabled={
-                    !state.settings.changingCard && !state.game.runRound
-                  }
-                />
-              ))}
-            </div>
+            {!dealerNotActive && !isSpectator && (
+              <div className={styles.cards}>
+                {state.cards.map((card, idx) => (
+                  <GameCard
+                    key={card}
+                    id={idx}
+                    value={card}
+                    sessionShortTitle={state.settings.scoreTypeShort}
+                    cards={state.cards}
+                    onClick={() => {
+                      socketIO.emit("cardSelection", card);
+                      setActiveCard(idx);
+                    }}
+                    isRunGame={true}
+                    isActiveCard={
+                      idx === activeCard &&
+                      (state.game.runRound || state.settings.changingCard)
+                    }
+                    disabled={
+                      !state.settings.changingCard && !state.game.runRound
+                    }
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           <div className={styles.memberList}>
@@ -269,7 +283,7 @@ export const Game = () => {
                 return (
                   <div className={styles.scoreTable} key={index}>
                     {state.game.endRound
-                      ? valueCardsInIssue[index]
+                      ? valueCardsInIssue[index] || "spectator"
                       : "In progress"}
                   </div>
                 );
