@@ -29,3 +29,7 @@ export const selectChatOpen = (state: IStore) => state.chatOpen;
 export const selectChat = (state: IStore) => state.chat;
 
 export const selectVoting = (state: IStore) => state.voting;
+
+export const selectGameTime = (state: IStore) => state.game.time;
+
+export const selectActiveIssue = (state: IStore) => state.game.issue;

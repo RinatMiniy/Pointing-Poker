@@ -95,6 +95,7 @@ export const GameSettings: React.FC<IGameSettingsProps> = (props) => {
           min={Math.floor(+props.gameSettings.roundTime / 60)}
           sec={+props.gameSettings.roundTime % 60}
           onSetTimer={props.onSetTimer}
+          isLobby={true}
         />
       </div>
       <div className={styles.title}>Add card values:</div>

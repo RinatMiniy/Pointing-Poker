@@ -1,11 +1,14 @@
 /* eslint-disable jsx-a11y/aria-role */
+import React from "react";
 import { H1 } from "../../sharedComponents/h1/H1";
 import styles from "./game.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { PlayerCard } from "../player-card/PlayerCard";
 import { Issues } from "../issues/Issues";
 import { IIssueCard, Settings } from "../../types";
+import { TimeField } from "../time-field/TimeField";
 import {
+  selectActiveIssue,
   selectIssues,
   selectSessionTitle,
   selectState,
@@ -48,6 +51,8 @@ export const Game = () => {
     cloneIssues.splice(id, 1);
     requestUpdate(Settings.issues, cloneIssues);
   };
+
+  const activeIssue = useSelector(selectActiveIssue);
 
   const handleUpdateIssue = (id: number, newIssue: IIssueCard) => {
     requestUpdate(
@@ -93,6 +98,8 @@ export const Game = () => {
     }
   }
 
+  const [activeCard, setActiveCard] = React.useState<number | null>(null);
+
   return (
     <div className={styles.game}>
       {!state.game.endGame ? (
@@ -115,81 +122,119 @@ export const Game = () => {
                   isMaster={true}
                 />
               </div>
-
-              <div className={styles.btnBlock}>
-                <div className={styles.btnBlockTop}>
-                  <p className={styles.timer}>time: {state.game.time}</p>
-                  {isDelear ? (
-                    <Link
-                      to={{
-                        pathname: "/",
-                        state: { hash: id },
-                      }}
-                    >
-                      <Button
-                        onClick={() => {
-                          socket.exit;
-                          dispatch(reset());
-                        }}
-                        text="StopGame"
-                      />
-                    </Link>
-                  ) : (
-                    <Button text="Exit" />
-                  )}
-                </div>
-                {isDelear ? (
-                  state.game.endRound ? (
-                    <div className={styles.btnBlockBottom}>
-                      <Button text="Restart Round" onClick={socket.runRound} />
-                      {console.log("")}
-                      {!(state.issues.length === state.game.issue + 1) ? (
-                        <Button
-                          text="Next Issue"
-                          onClick={() =>
-                            socketIO.emit("newRound", state.game.issue + 1)
-                          }
-                        />
-                      ) : (
-                        <Button
-                          text="End Game"
-                          onClick={() => socketIO.emit("endGame")}
-                        />
-                      )}
-                    </div>
-                  ) : (
-                    <div className={styles.btnBlockBottom}>
-                      <Button text="Run Round" onClick={socket.runRound} />
-                    </div>
-                  )
-                ) : (
-                  <></>
-                )}
-              </div>
+              {isDelear ? (
+                <Link
+                  to={{
+                    pathname: "/",
+                    state: { hash: id },
+                  }}
+                >
+                  <Button
+                    onClick={() => {
+                      socket.exit;
+                      dispatch(reset());
+                    }}
+                    text="StopGame"
+                  />
+                </Link>
+              ) : (
+                <Button text="Exit" />
+              )}
             </div>
 
             <div className={styles.mainBlock}>
               <div className={styles.issuesContainer}>
                 <H1 text="Issues:" />
-                <Issues
-                  issues={issues}
-                  handleCreateIssue={handleCreateIssue}
-                  handleUpdateIssue={handleUpdateIssue}
-                  onDelete={handleDeleteIssue}
-                />
-              </div>
+                <div className={styles.blockIssues}>
+                  <Issues
+                    issues={issues}
+                    handleCreateIssue={handleCreateIssue}
+                    handleUpdateIssue={handleUpdateIssue}
+                    onDelete={handleDeleteIssue}
+                    activeIssue={activeIssue}
+                  />
 
-              <div className={styles.statisticBlock}>
-                {state.game.endRound && (
-                  <div>
-                    {Object.keys(statistic[0]).map((key) => (
-                      <li key={key}>
-                        {key} - {statistic[0][key]}
-                      </li>
-                    ))}
+                  <div className={styles.btnBlock}>
+                    <TimeField
+                      min={Math.floor(+state.settings.roundTime / 60)}
+                      sec={+state.settings.roundTime % 60}
+                      onSetTimer={null}
+                      isLobby={false}
+                      disabled={true}
+                    />
+
+                    {isDelear ? (
+                      state.game.endRound ? (
+                        <div className={styles.btnBlockBottom}>
+                          <Button
+                            text="Restart Round"
+                            onClick={socket.runRound}
+                          />
+                          {!(state.issues.length === state.game.issue + 1) ? (
+                            <Button
+                              text="Next Issue"
+                              onClick={() => {
+                                setActiveCard(null);
+                                socketIO.emit("newRound", state.game.issue + 1);
+                              }}
+                              isPrimary={true}
+                            />
+                          ) : (
+                            <Button
+                              text="End Game"
+                              onClick={() => socketIO.emit("endGame")}
+                            />
+                          )}
+                        </div>
+                      ) : (
+                        <div className={styles.btnBlockBottom}>
+                          {state.game.runRound ? (
+                            <></>
+                          ) : (
+                            <Button
+                              text="Run Round"
+                              onClick={socket.runRound}
+                            />
+                          )}
+                        </div>
+                      )
+                    ) : (
+                      <></>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
+            </div>
+
+            <div className={styles.statisticBlock}>
+              {state.game.endRound && (
+                <div>
+                  <H1 text="Statistics:" />
+                  <div className={styles.results}>
+                    {Object.keys(statistic[0]).map((key, idx) => {
+                      console.log(statistic[0], "static[0]");
+                      const votes = Object.values(statistic[0]).reduce(
+                        (sum, el) => +el + +sum,
+                        0
+                      ) as number;
+                      return (
+                        <div key={key}>
+                          <GameCard
+                            id={idx}
+                            value={key}
+                            sessionShortTitle={state.settings.scoreTypeShort}
+                            cards={state.cards}
+                            isRunGame={true}
+                          />
+                          <div className={styles.percent}>
+                            {Math.round((+statistic[0][key] / votes) * 100)}%
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className={styles.cards}>
@@ -202,7 +247,16 @@ export const Game = () => {
                   cards={state.cards}
                   onClick={() => {
                     socketIO.emit("cardSelection", card);
+                    setActiveCard(idx);
                   }}
+                  isRunGame={true}
+                  isActiveCard={
+                    idx === activeCard &&
+                    (state.game.runRound || state.settings.changingCard)
+                  }
+                  disabled={
+                    !state.settings.changingCard && !state.game.runRound
+                  }
                 />
               ))}
             </div>
@@ -210,18 +264,20 @@ export const Game = () => {
 
           <div className={styles.memberList}>
             <div className={styles.columnScore}>
+              <H1 text="Score" />
               {users.map((value, index) => {
                 return (
                   <div className={styles.scoreTable} key={index}>
                     {state.game.endRound
                       ? valueCardsInIssue[index]
-                      : "in progress"}
+                      : "In progress"}
                   </div>
                 );
               })}
             </div>
 
             <div className={styles.columnMembers}>
+              <H1 text="Players" />
               <Members members={users} isMaster={false} />
             </div>
           </div>

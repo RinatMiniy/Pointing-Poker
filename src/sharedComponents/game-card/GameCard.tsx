@@ -14,6 +14,9 @@ type IGameCardProps = {
   sessionShortTitle: string;
   cards: string[];
   onClick?: () => void;
+  isRunGame?: boolean;
+  isActiveCard?: boolean;
+  disabled?: boolean;
 };
 
 export const GameCard: React.FC<IGameCardProps> = (props) => {
@@ -51,7 +54,14 @@ export const GameCard: React.FC<IGameCardProps> = (props) => {
 
   return (
     <GameCardContainer>
-      <div onClick={() => props.onClick()} role="presentation">
+      <div
+        className={cn(styles.presentation, {
+          [styles.isActive]: props.isActiveCard,
+          [styles.disabled]: props.disabled,
+        })}
+        onClick={() => props.onClick()}
+        role="presentation"
+      >
         {!inputVisible && (
           <div className={styles.upperTitle}>
             <div
@@ -61,7 +71,7 @@ export const GameCard: React.FC<IGameCardProps> = (props) => {
             >
               {value}
             </div>
-            <EditorSvg onClick={handleEdit} />
+            {!props.isRunGame && <EditorSvg onClick={handleEdit} />}
           </div>
         )}
         {inputVisible && (
