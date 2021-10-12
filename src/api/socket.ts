@@ -1,13 +1,13 @@
 import io from "socket.io-client";
 import { IUser, IUserRequest, Settings } from "../types";
 
-export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
-  transports: ["websocket", "polling"],
-});
-
-// export const socketIO = io("http://localhost:3000", {
+// export const socketIO = io("https://pointing-poker-be.herokuapp.com/", {
 //   transports: ["websocket", "polling"],
 // });
+
+export const socketIO = io("http://localhost:3000", {
+  transports: ["websocket", "polling"],
+});
 
 interface ISendCreate {
   type: "create";
@@ -68,6 +68,18 @@ function kickForUserNotification(fn: () => void) {
   socketIO.on("kick", fn);
 }
 
+function loginRequestNotification(fn: (user: IUser) => void) {
+  socketIO.on("loginRequest", fn);
+}
+
+function loginAllow(user: IUser) {
+  socketIO.emit("loginAllow", user);
+}
+
+function loginDeny(user: IUser) {
+  socketIO.emit("loginDeny", user);
+}
+
 function exit() {
   socketIO.emit("exit");
 }
@@ -103,6 +115,9 @@ export const socket = {
   subscribeToUpdates,
   kick,
   kickForUserNotification,
+  loginRequestNotification,
+  loginAllow,
+  loginDeny,
   exit,
   updateSettings,
   runGame,

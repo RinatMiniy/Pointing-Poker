@@ -59,7 +59,9 @@ export const GameCard: React.FC<IGameCardProps> = (props) => {
           [styles.isActive]: props.isActiveCard,
           [styles.disabled]: props.disabled,
         })}
-        onClick={() => props.onClick()}
+        onClick={() => {
+          if (props.onClick) props.onClick();
+        }}
         role="presentation"
       >
         {!inputVisible && (

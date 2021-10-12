@@ -21,6 +21,7 @@ import { Members } from "../../sharedComponents/members/Members";
 import { GameCard } from "../../sharedComponents/game-card/GameCard";
 import { Link, useParams } from "react-router-dom";
 import { GameResult } from "../GameResult/GameResult";
+import { LoginRequest } from "../loginRequest/LoginRequest";
 
 let statistic = [];
 
@@ -299,6 +300,7 @@ export const Game = () => {
       ) : (
         <GameResult />
       )}
+      <LoginRequest />
     </div>
   );
 };
