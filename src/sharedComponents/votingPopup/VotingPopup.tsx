@@ -5,7 +5,7 @@ import { PopupOverlay } from "../popup-overlay/PopupOverlay";
 import { socket } from "../../api/socket";
 import { useSelector } from "react-redux";
 import { selectUsers } from "../../components/redux/selectors";
-import styles from "./votingPopup.modules.scss";
+import styles from "./votingPopup.module.scss";
 
 type IVotingPopup = {
   whoSocket: string;

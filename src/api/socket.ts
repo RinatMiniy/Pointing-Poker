@@ -68,6 +68,18 @@ function kickForUserNotification(fn: () => void) {
   socketIO.on("kick", fn);
 }
 
+function loginRequestNotification(fn: (user: IUser) => void) {
+  socketIO.on("loginRequest", fn);
+}
+
+function loginAllow(user: IUser) {
+  socketIO.emit("loginAllow", user);
+}
+
+function loginDeny(user: IUser) {
+  socketIO.emit("loginDeny", user);
+}
+
 function exit() {
   socketIO.emit("exit");
 }
@@ -80,8 +92,16 @@ function runGame() {
   socketIO.emit("runGame");
 }
 
+function endGame() {
+  socketIO.emit("endGame");
+}
+
 function runRound() {
   socketIO.emit("runRound");
+}
+
+function endRound() {
+  socketIO.emit("endRound");
 }
 
 function addMsgToChat(user: IUser, msg: string) {
@@ -103,10 +123,15 @@ export const socket = {
   subscribeToUpdates,
   kick,
   kickForUserNotification,
+  loginRequestNotification,
+  loginAllow,
+  loginDeny,
   exit,
   updateSettings,
   runGame,
+  endGame,
   runRound,
+  endRound,
   addMsgToChat,
   votingStart,
   vote,

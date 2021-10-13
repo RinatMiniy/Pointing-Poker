@@ -2,7 +2,7 @@
 import React from "react";
 import { H1 } from "../../sharedComponents/h1/H1";
 import styles from "./game.module.scss";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { PlayerCard } from "../player-card/PlayerCard";
 import { Issues } from "../issues/Issues";
 import { IIssueCard, Settings } from "../../types";
@@ -14,22 +14,18 @@ import {
   selectState,
   selectUsers,
 } from "../redux/selectors";
-import { requestUpdate, reset } from "../redux/actions";
+import { requestUpdate } from "../redux/actions";
 import { socketIO, socket } from "../../api/socket";
 import { Button } from "../../sharedComponents/button/button";
 import { Members } from "../../sharedComponents/members/Members";
 import { GameCard } from "../../sharedComponents/game-card/GameCard";
-import { Link, useParams } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { GameResult } from "../GameResult/GameResult";
+import { LoginRequest } from "../loginRequest/LoginRequest";
 
 let statistic = [];
 
 export const Game = () => {
-  interface IRouteParams {
-    id: string;
-  }
-  const dispatch = useDispatch();
-
   const state = useSelector(selectState);
 
   const users = useSelector(selectUsers);
@@ -44,8 +40,6 @@ export const Game = () => {
   const isSpectator = activeUser.role === "spectator";
 
   const valueCardsInIssue = [];
-
-  const { id } = useParams<IRouteParams>();
 
   const handleCreateIssue = (issue: IIssueCard) => {
     requestUpdate(Settings.issues, issues.concat(issue));
@@ -111,6 +105,12 @@ export const Game = () => {
   }
 
   const [activeCard, setActiveCard] = React.useState<number | null>(null);
+  const [isUserExit, setUserExit] = React.useState(false);
+
+  const handleExit = () => {
+    socket.exit();
+    setUserExit(true);
+  };
 
   return (
     <div className={styles.game}>
@@ -135,22 +135,9 @@ export const Game = () => {
                 />
               </div>
               {isDelear ? (
-                <Link
-                  to={{
-                    pathname: "/",
-                    state: { hash: id },
-                  }}
-                >
-                  <Button
-                    onClick={() => {
-                      socket.exit;
-                      dispatch(reset());
-                    }}
-                    text="StopGame"
-                  />
-                </Link>
+                <Button onClick={socket.endGame} text="End Game" />
               ) : (
-                <Button text="Exit" />
+                <Button text="Exit" onClick={handleExit} />
               )}
             </div>
 
@@ -175,44 +162,51 @@ export const Game = () => {
                       disabled={true}
                     />
 
-                    {isDelear ? (
-                      state.game.endRound ? (
+                    {isDelear &&
+                      state.issues.length &&
+                      state.issues[state.game.issue] && (
                         <div className={styles.btnBlockBottom}>
-                          <Button
-                            text="Restart Round"
-                            onClick={socket.runRound}
-                          />
-                          {!(state.issues.length === state.game.issue + 1) ? (
+                          {/*при пеходе на новое ишью надо узнать играли ли там уже*/}
+                          {!state.game.runRound &&
+                            !state.game.runRound &&
+                            !statistic[0] && (
+                              <Button
+                                text="Run Round"
+                                onClick={socket.runRound}
+                              />
+                            )}
+
+                          {(state.game.endRound ||
+                            (!state.game.runRound &&
+                              statistic[0] &&
+                              Object.keys(statistic[0]).length > 0)) && (
+                            <Button text="Restart" onClick={socket.runRound} />
+                          )}
+
+                          {state.game.runRound && !state.game.endRound && (
                             <Button
-                              text="Next Issue"
-                              onClick={() => {
-                                setActiveCard(null);
-                                socketIO.emit("newRound", state.game.issue + 1);
-                              }}
-                              isPrimary={true}
-                            />
-                          ) : (
-                            <Button
-                              text="End Game"
-                              onClick={() => socketIO.emit("endGame")}
+                              text="End Round"
+                              onClick={socket.endRound}
                             />
                           )}
+
+                          {state.game.endRound &&
+                            Number(state.game.issue + 1) !==
+                              state.issues.length && (
+                              <Button
+                                text="Next Issue"
+                                onClick={() => {
+                                  setActiveCard(null);
+                                  socketIO.emit(
+                                    "newRound",
+                                    state.game.issue + 1
+                                  );
+                                }}
+                                isPrimary={true}
+                              />
+                            )}
                         </div>
-                      ) : (
-                        <div className={styles.btnBlockBottom}>
-                          {state.game.runRound ? (
-                            <></>
-                          ) : (
-                            <Button
-                              text="Run Round"
-                              onClick={socket.runRound}
-                            />
-                          )}
-                        </div>
-                      )
-                    ) : (
-                      <></>
-                    )}
+                      )}
                   </div>
                 </div>
               </div>
@@ -249,31 +243,34 @@ export const Game = () => {
               )}
             </div>
 
-            {!dealerNotActive && !isSpectator && (
-              <div className={styles.cards}>
-                {state.cards.map((card, idx) => (
-                  <GameCard
-                    key={card}
-                    id={idx}
-                    value={card}
-                    sessionShortTitle={state.settings.scoreTypeShort}
-                    cards={state.cards}
-                    onClick={() => {
-                      socketIO.emit("cardSelection", card);
-                      setActiveCard(idx);
-                    }}
-                    isRunGame={true}
-                    isActiveCard={
-                      idx === activeCard &&
-                      (state.game.runRound || state.settings.changingCard)
-                    }
-                    disabled={
-                      !state.settings.changingCard && !state.game.runRound
-                    }
-                  />
-                ))}
-              </div>
-            )}
+            {!dealerNotActive &&
+              !isSpectator &&
+              (state.game.runRound ||
+                (state.settings.changingCard && state.game.endRound)) && (
+                <div className={styles.cards}>
+                  {state.cards.map((card, idx) => (
+                    <GameCard
+                      key={card}
+                      id={idx}
+                      value={card}
+                      sessionShortTitle={state.settings.scoreTypeShort}
+                      cards={state.cards}
+                      onClick={() => {
+                        socketIO.emit("cardSelection", card);
+                        setActiveCard(idx);
+                      }}
+                      isRunGame={true}
+                      isActiveCard={
+                        idx === activeCard &&
+                        (state.game.runRound || state.settings.changingCard)
+                      }
+                      disabled={
+                        !state.settings.changingCard && !state.game.runRound
+                      }
+                    />
+                  ))}
+                </div>
+              )}
           </div>
 
           <div className={styles.memberList}>
@@ -299,6 +296,8 @@ export const Game = () => {
       ) : (
         <GameResult />
       )}
+      <LoginRequest />
+      {isUserExit && <Redirect to="/" />}
     </div>
   );
 };
