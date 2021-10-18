@@ -1,0 +1,40 @@
+.gameResult {
+  padding-left: 46px;
+}
+
+.issue {
+  display: flex;
+  width: 100%;
+}
+
+.title {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.priority {
+  font-size: 10px;
+  color: rgb(116, 116, 116);
+  margin-top: 5px;
+}
+
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cards {
+  display: flex;
+  gap: 25px;
+  margin: 22px 0;
+}
+
+.controls {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 100px;
+}

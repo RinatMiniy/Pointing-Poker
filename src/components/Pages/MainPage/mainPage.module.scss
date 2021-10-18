@@ -1,0 +1,50 @@
+.mainPage {
+  grid-area: main;
+  width: 70%;
+  justify-self: center;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 0 36px 0;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 260px;
+}
+
+.connectLobby {
+  display: flex;
+}
+
+.mainLogo {
+  height: 150px;
+  width: 550px;
+  margin: 120px auto 0 auto;
+}
+
+.mainTitle {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 48px;
+  line-height: 56px;
+  color: var(--secondary-color);
+
+  width: 422px;
+  text-align: center;
+
+  margin: 50px 0;
+}
+
+.mainLabel {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.fixlabel {
+  display: flex;
+
+  & p {
+    width: 55%;
+  }
+}

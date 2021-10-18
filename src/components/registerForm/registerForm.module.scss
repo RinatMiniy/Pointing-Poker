@@ -1,0 +1,94 @@
+.registerForm {
+  width: 876px;
+  height: 833px;
+  position: absolute;
+  background: white;
+  opacity: 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 75px 35px;
+
+  & button {
+    margin: 0 15px 15px 15px;
+  }
+}
+
+.formRegister {
+  display: flex;
+  flex-direction: column;
+
+  & input {
+    margin: 16px 0 26px;
+  }
+}
+
+.connectToLobby {
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 75px;
+  color: #000000;
+  margin-bottom: 50px;
+}
+
+.overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #000000;
+  opacity: 0.7;
+  min-height: 1102px;
+}
+
+.label {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileInputLabel {
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 0px 0px 0px 10px;
+  height: 47px;
+  width: 275px;
+  text-align: center;
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 28px;
+  margin: 16px 0 26px;
+}
+
+.observerWrapper {
+  position: absolute;
+  right: 6%;
+  top: 12%;
+  text-align: center;
+  display: flex;
+}
+
+.confirmButton {
+  position: absolute;
+  bottom: 0%;
+  left: 0%;
+}
+
+.cancelButton {
+  position: absolute;
+  bottom: 0%;
+  right: 0%;
+}

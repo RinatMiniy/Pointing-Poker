@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Ruda:wght@700&display=swap");
+@import "~react-toastify/dist/ReactToastify.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary-color: #2b3a67;
+  --secondary-color: #66999b;
+  --third-color: #496a81;
+}

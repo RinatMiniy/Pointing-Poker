@@ -1,0 +1,15 @@
+.cardContainer {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  width: 297px;
+  height: 69px;
+  box-shadow: 1px 3px 8px 0px rgba(34, 60, 80, 0.2);
+  padding: 10px;
+  font-family: Roboto, sans-serif;
+  gap: 10px;
+}
+
+.isActive {
+  background: rgba(96, 218, 191, 0.33);
+}
